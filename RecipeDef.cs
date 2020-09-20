@@ -10,5 +10,9 @@ namespace RimDef
         {
             this.ingredients.Add(row);
         }
+
+        public string research;
+        public string skill;
+        public string work;
     }
 }

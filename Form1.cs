@@ -20,10 +20,12 @@ namespace RimDef
 
             txtModDir.Text = @"C:\Games\RimWorld Royalty\Mods";
 
-            lwDetail.Columns.Add("amount", 50);
-            lwDetail.Columns.Add("ingredients", 150);
-            lwDetail.Columns.Add("products", 100);
-            lwDetail.Columns.Add("work", 50);
+            lwRecipe.Columns.Add("amount", 50);
+            lwRecipe.Columns.Add("ingredients", 200);
+            lwRecipe.Columns.Add("products", 100);
+
+            lwDetail.Columns.Add("key", 150);
+            lwDetail.Columns.Add("value", 150);
         }
 
         private void loadModList(string path)
@@ -120,22 +122,26 @@ namespace RimDef
 
                 xmlView.Text = def.xml;
 
-                if (def.defType == "RecipeDef")
+                if (def.defType.ToLower() == "recipedef")
                 {
                     RecipeDef recipe = (RecipeDef) def;
 
-                    lwDetail.Items.Clear();
+                    lwRecipe.Items.Clear();
 
                     foreach (string[] li in recipe.ingredients)
                     {
-                        var listViewItem = new ListViewItem(li);
-                        lwDetail.Items.Add(listViewItem);
+                        lwRecipe.Items.Add(new ListViewItem(li));
                     }
+
+                    lwDetail.Items.Clear();
+                    lwDetail.Items.Add(new ListViewItem(new string[] { "Work amount", recipe.work }));
+                    lwDetail.Items.Add(new ListViewItem(new string[] { "Skill requirements", recipe.skill }));
+                    lwDetail.Items.Add(new ListViewItem(new string[] { "Research prerequisite", recipe.research }));
 
                     gbRecipe.Visible = true;
                 }
 
-                if (def.defType == "ThingDef")
+                if (def.defType.ToLower() == "thingdef")
                 {
                     Console.WriteLine("texture path = " + def.texture);
 

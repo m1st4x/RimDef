@@ -66,9 +66,7 @@ namespace RimDef
             {
                 var doc = new XmlDocument();
                 doc.Load(filename);
-                string xpath = "/Defs";
-                XmlNodeList nodeList = doc.DocumentElement.SelectNodes(xpath);
-                foreach (XmlNode node in nodeList)
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Defs"))
                 {
                     foreach (XmlNode child in node.ChildNodes)
                     {
@@ -81,7 +79,7 @@ namespace RimDef
                                 defTypes.Add(type);
                             }
 
-                            string defType = type.Substring(0, idx);
+                            string defType = type.Substring(0, idx).ToLower();
 
                             string defName = "";
                             string label = "";
@@ -127,12 +125,12 @@ namespace RimDef
 
                             Def def = new Def();
 
-                            if (defType == "Thing")
+                            if (defType == "thing")
                             {
                                 def = new ThingDef();
                             }
 
-                            if (defType == "Recipe")
+                            if (defType == "recipe")
                             {
                                 RecipeDef recipe = new RecipeDef();
                                 Console.WriteLine("Recipe: " + label);
@@ -149,8 +147,32 @@ namespace RimDef
                                     }
                                 }
 
+                                // <researchPrerequisite>
+                                string research = "-";
+                                XmlNode researchNode = child.SelectSingleNode("researchPrerequisite");
+                                if (researchNode != null)
+                                {
+                                    research = researchNode.InnerText;
+                                }
+                                recipe.research = research;
+
+                                // <skillRequirements>
+                                string skill = "-";
+                                XmlNode skillNode = child.SelectSingleNode("skillRequirements");
+                                if (skillNode != null)
+                                {
+                                    skill = skillNode.InnerText;
+                                }
+                                recipe.skill = skill;
+
                                 // <workAmount>
-                                string work = child.SelectSingleNode("workAmount").InnerText;
+                                string work = "-";
+                                XmlNode workNode = child.SelectSingleNode("workAmount");
+                                if (workNode != null)
+                                {
+                                    work = workNode.InnerText;
+                                }
+                                recipe.work = work;
 
                                 // <ingredients>
                                 foreach (XmlNode n in child.SelectNodes("ingredients/li"))
@@ -168,7 +190,7 @@ namespace RimDef
 
                                     string amount = n.LastChild.InnerText;
 
-                                    recipe.addIngredients(new string[] { amount, ingredients, products, work });
+                                    recipe.addIngredients(new string[] { amount, ingredients, products });
                                 }
                                 def = recipe;
                             }
@@ -192,10 +214,7 @@ namespace RimDef
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n" + ex);
-            }
+            catch (Exception ex) { Console.WriteLine(ex); }
 
             return xmlDefs;
         }

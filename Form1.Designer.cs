@@ -31,7 +31,7 @@
             this.lbMods = new System.Windows.Forms.ListBox();
             this.lbDefTypes = new System.Windows.Forms.ListBox();
             this.lwDefs = new System.Windows.Forms.ListView();
-            this.lwDetail = new System.Windows.Forms.ListView();
+            this.lwRecipe = new System.Windows.Forms.ListView();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.btnFolder = new System.Windows.Forms.Button();
@@ -48,6 +48,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.gbDesc = new System.Windows.Forms.GroupBox();
             this.gbRecipe = new System.Windows.Forms.GroupBox();
+            this.lwDetail = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -74,29 +75,34 @@
             // lwDefs
             // 
             this.lwDefs.FullRowSelect = true;
+            this.lwDefs.GridLines = true;
+            this.lwDefs.HideSelection = false;
             this.lwDefs.Location = new System.Drawing.Point(17, 306);
             this.lwDefs.Name = "lwDefs";
-            this.lwDefs.Size = new System.Drawing.Size(400, 250);
+            this.lwDefs.Size = new System.Drawing.Size(400, 261);
             this.lwDefs.TabIndex = 2;
             this.lwDefs.UseCompatibleStateImageBehavior = false;
             this.lwDefs.View = System.Windows.Forms.View.Details;
             this.lwDefs.SelectedIndexChanged += new System.EventHandler(this.lwDefs_SelectedIndexChanged);
             // 
-            // lwDetail
+            // lwRecipe
             // 
-            this.lwDetail.Location = new System.Drawing.Point(6, 19);
-            this.lwDetail.Name = "lwDetail";
-            this.lwDetail.Size = new System.Drawing.Size(362, 69);
-            this.lwDetail.TabIndex = 3;
-            this.lwDetail.UseCompatibleStateImageBehavior = false;
-            this.lwDetail.View = System.Windows.Forms.View.Details;
+            this.lwRecipe.GridLines = true;
+            this.lwRecipe.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lwRecipe.HideSelection = false;
+            this.lwRecipe.Location = new System.Drawing.Point(6, 19);
+            this.lwRecipe.Name = "lwRecipe";
+            this.lwRecipe.Size = new System.Drawing.Size(362, 80);
+            this.lwRecipe.TabIndex = 3;
+            this.lwRecipe.UseCompatibleStateImageBehavior = false;
+            this.lwRecipe.View = System.Windows.Forms.View.Details;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(696, 351);
+            this.pictureBox1.Location = new System.Drawing.Point(709, 336);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(119, 116);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.Size = new System.Drawing.Size(100, 100);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
@@ -130,7 +136,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(17, 562);
+            this.txtSearch.Location = new System.Drawing.Point(18, 573);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(120, 20);
             this.txtSearch.TabIndex = 8;
@@ -138,7 +144,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(143, 560);
+            this.btnSearch.Location = new System.Drawing.Point(144, 571);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(50, 23);
             this.btnSearch.TabIndex = 9;
@@ -152,7 +158,7 @@
             this.thingDesc.Multiline = true;
             this.thingDesc.Name = "thingDesc";
             this.thingDesc.ReadOnly = true;
-            this.thingDesc.Size = new System.Drawing.Size(237, 69);
+            this.thingDesc.Size = new System.Drawing.Size(237, 48);
             this.thingDesc.TabIndex = 10;
             // 
             // xmlView
@@ -162,7 +168,7 @@
             this.xmlView.Name = "xmlView";
             this.xmlView.ReadOnly = true;
             this.xmlView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.xmlView.Size = new System.Drawing.Size(374, 313);
+            this.xmlView.Size = new System.Drawing.Size(374, 298);
             this.xmlView.TabIndex = 11;
             // 
             // label1
@@ -213,9 +219,9 @@
             // gbDesc
             // 
             this.gbDesc.Controls.Add(this.thingDesc);
-            this.gbDesc.Location = new System.Drawing.Point(441, 361);
+            this.gbDesc.Location = new System.Drawing.Point(441, 336);
             this.gbDesc.Name = "gbDesc";
-            this.gbDesc.Size = new System.Drawing.Size(249, 95);
+            this.gbDesc.Size = new System.Drawing.Size(249, 73);
             this.gbDesc.TabIndex = 19;
             this.gbDesc.TabStop = false;
             this.gbDesc.Text = "Description";
@@ -224,13 +230,26 @@
             // gbRecipe
             // 
             this.gbRecipe.Controls.Add(this.lwDetail);
-            this.gbRecipe.Location = new System.Drawing.Point(441, 457);
+            this.gbRecipe.Controls.Add(this.lwRecipe);
+            this.gbRecipe.Location = new System.Drawing.Point(441, 409);
             this.gbRecipe.Name = "gbRecipe";
-            this.gbRecipe.Size = new System.Drawing.Size(374, 99);
+            this.gbRecipe.Size = new System.Drawing.Size(374, 164);
             this.gbRecipe.TabIndex = 20;
             this.gbRecipe.TabStop = false;
             this.gbRecipe.Text = "Recipe";
             this.gbRecipe.Visible = false;
+            // 
+            // lwDetail
+            // 
+            this.lwDetail.GridLines = true;
+            this.lwDetail.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lwDetail.HideSelection = false;
+            this.lwDetail.Location = new System.Drawing.Point(6, 99);
+            this.lwDetail.Name = "lwDetail";
+            this.lwDetail.Size = new System.Drawing.Size(362, 59);
+            this.lwDetail.TabIndex = 4;
+            this.lwDetail.UseCompatibleStateImageBehavior = false;
+            this.lwDetail.View = System.Windows.Forms.View.Details;
             // 
             // Form1
             // 
@@ -271,7 +290,7 @@
         private System.Windows.Forms.ListBox lbMods;
         private System.Windows.Forms.ListBox lbDefTypes;
         private System.Windows.Forms.ListView lwDefs;
-        private System.Windows.Forms.ListView lwDetail;
+        private System.Windows.Forms.ListView lwRecipe;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button btnFolder;
@@ -288,6 +307,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox gbDesc;
         private System.Windows.Forms.GroupBox gbRecipe;
+        private System.Windows.Forms.ListView lwDetail;
     }
 }
 
