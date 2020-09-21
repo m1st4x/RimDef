@@ -127,7 +127,19 @@ namespace RimDef
 
                             if (defType == "thing")
                             {
-                                def = new ThingDef();
+                                ThingDef thing = new ThingDef();
+
+                                // <statBases>
+                                XmlNode statsNode = child.SelectSingleNode("statBases");
+                                if (statsNode != null)
+                                {
+                                    foreach (XmlNode stat in statsNode.ChildNodes)
+                                    {
+                                        Console.WriteLine(stat.Name + ": " + stat.InnerText);
+                                        thing.details.Add(new string[] { stat.Name, stat.InnerText });
+                                    }
+                                }
+                                def = thing;
                             }
 
                             if (defType == "recipe")

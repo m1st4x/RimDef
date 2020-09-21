@@ -48,7 +48,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.gbDesc = new System.Windows.Forms.GroupBox();
             this.gbRecipe = new System.Windows.Forms.GroupBox();
-            this.lwDetail = new System.Windows.Forms.ListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -79,7 +78,7 @@
             this.lwDefs.HideSelection = false;
             this.lwDefs.Location = new System.Drawing.Point(17, 306);
             this.lwDefs.Name = "lwDefs";
-            this.lwDefs.Size = new System.Drawing.Size(400, 261);
+            this.lwDefs.Size = new System.Drawing.Size(400, 277);
             this.lwDefs.TabIndex = 2;
             this.lwDefs.UseCompatibleStateImageBehavior = false;
             this.lwDefs.View = System.Windows.Forms.View.Details;
@@ -90,16 +89,16 @@
             this.lwRecipe.GridLines = true;
             this.lwRecipe.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lwRecipe.HideSelection = false;
-            this.lwRecipe.Location = new System.Drawing.Point(6, 19);
+            this.lwRecipe.Location = new System.Drawing.Point(0, 19);
             this.lwRecipe.Name = "lwRecipe";
-            this.lwRecipe.Size = new System.Drawing.Size(362, 80);
+            this.lwRecipe.Size = new System.Drawing.Size(360, 80);
             this.lwRecipe.TabIndex = 3;
             this.lwRecipe.UseCompatibleStateImageBehavior = false;
             this.lwRecipe.View = System.Windows.Forms.View.Details;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(709, 336);
+            this.pictureBox1.Location = new System.Drawing.Point(700, 336);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(100, 100);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -136,7 +135,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(18, 573);
+            this.txtSearch.Location = new System.Drawing.Point(17, 589);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(120, 20);
             this.txtSearch.TabIndex = 8;
@@ -144,7 +143,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(144, 571);
+            this.btnSearch.Location = new System.Drawing.Point(143, 587);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(50, 23);
             this.btnSearch.TabIndex = 9;
@@ -154,16 +153,16 @@
             // 
             // thingDesc
             // 
-            this.thingDesc.Location = new System.Drawing.Point(6, 19);
+            this.thingDesc.Location = new System.Drawing.Point(0, 19);
             this.thingDesc.Multiline = true;
             this.thingDesc.Name = "thingDesc";
             this.thingDesc.ReadOnly = true;
-            this.thingDesc.Size = new System.Drawing.Size(237, 48);
+            this.thingDesc.Size = new System.Drawing.Size(238, 75);
             this.thingDesc.TabIndex = 10;
             // 
             // xmlView
             // 
-            this.xmlView.Location = new System.Drawing.Point(441, 32);
+            this.xmlView.Location = new System.Drawing.Point(440, 32);
             this.xmlView.Multiline = true;
             this.xmlView.Name = "xmlView";
             this.xmlView.ReadOnly = true;
@@ -219,9 +218,9 @@
             // gbDesc
             // 
             this.gbDesc.Controls.Add(this.thingDesc);
-            this.gbDesc.Location = new System.Drawing.Point(441, 336);
+            this.gbDesc.Location = new System.Drawing.Point(440, 336);
             this.gbDesc.Name = "gbDesc";
-            this.gbDesc.Size = new System.Drawing.Size(249, 73);
+            this.gbDesc.Size = new System.Drawing.Size(238, 94);
             this.gbDesc.TabIndex = 19;
             this.gbDesc.TabStop = false;
             this.gbDesc.Text = "Description";
@@ -229,33 +228,20 @@
             // 
             // gbRecipe
             // 
-            this.gbRecipe.Controls.Add(this.lwDetail);
             this.gbRecipe.Controls.Add(this.lwRecipe);
-            this.gbRecipe.Location = new System.Drawing.Point(441, 409);
+            this.gbRecipe.Location = new System.Drawing.Point(440, 510);
             this.gbRecipe.Name = "gbRecipe";
-            this.gbRecipe.Size = new System.Drawing.Size(374, 164);
+            this.gbRecipe.Size = new System.Drawing.Size(360, 100);
             this.gbRecipe.TabIndex = 20;
             this.gbRecipe.TabStop = false;
-            this.gbRecipe.Text = "Recipe";
+            this.gbRecipe.Text = "Ingredients";
             this.gbRecipe.Visible = false;
-            // 
-            // lwDetail
-            // 
-            this.lwDetail.GridLines = true;
-            this.lwDetail.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lwDetail.HideSelection = false;
-            this.lwDetail.Location = new System.Drawing.Point(6, 99);
-            this.lwDetail.Name = "lwDetail";
-            this.lwDetail.Size = new System.Drawing.Size(362, 59);
-            this.lwDetail.TabIndex = 4;
-            this.lwDetail.UseCompatibleStateImageBehavior = false;
-            this.lwDetail.View = System.Windows.Forms.View.Details;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(836, 603);
+            this.ClientSize = new System.Drawing.Size(834, 631);
             this.Controls.Add(this.gbRecipe);
             this.Controls.Add(this.gbDesc);
             this.Controls.Add(this.label5);
@@ -307,7 +293,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox gbDesc;
         private System.Windows.Forms.GroupBox gbRecipe;
-        private System.Windows.Forms.ListView lwDetail;
     }
 }
 

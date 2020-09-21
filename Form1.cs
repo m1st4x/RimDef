@@ -14,6 +14,8 @@ namespace RimDef
         List<Def> defs = new List<Def>();
         List<Def> defsView = new List<Def>();
 
+        private System.Windows.Forms.ListView lwDetails = new System.Windows.Forms.ListView();
+
         public Form1()
         {
             InitializeComponent();
@@ -21,11 +23,27 @@ namespace RimDef
             txtModDir.Text = @"C:\Games\RimWorld Royalty\Mods";
 
             lwRecipe.Columns.Add("amount", 50);
-            lwRecipe.Columns.Add("ingredients", 200);
+            lwRecipe.Columns.Add("ingredient", 200);
             lwRecipe.Columns.Add("products", 100);
 
-            lwDetail.Columns.Add("key", 150);
-            lwDetail.Columns.Add("value", 150);
+            // 
+            // lwDetail
+            // 
+            this.lwDetails.GridLines = true;
+            this.lwDetails.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.lwDetails.HideSelection = false;
+            this.lwDetails.Location = new System.Drawing.Point(440, 440);
+            this.lwDetails.Name = "lwDetail";
+            //this.lwDetails.Size = new System.Drawing.Size(360, 60);
+            this.lwDetails.TabIndex = 4;
+            this.lwDetails.UseCompatibleStateImageBehavior = false;
+            this.lwDetails.View = System.Windows.Forms.View.Details;
+            this.lwDetails.Visible = false;
+
+            this.lwDetails.Columns.Add("key", 150);
+            this.lwDetails.Columns.Add("value", 150);
+
+            this.Controls.Add(this.lwDetails);
         }
 
         private void loadModList(string path)
@@ -70,6 +88,8 @@ namespace RimDef
             gbDesc.Visible = false;
             gbRecipe.Visible = false;
             pictureBox1.Visible = false;
+            lwDetails.Items.Clear();
+            lwRecipe.Items.Clear();
 
             lwDefs.Columns.Add("Type", 100);
             lwDefs.Columns.Add("Name", 120);
@@ -119,6 +139,7 @@ namespace RimDef
                 gbRecipe.Visible = false;
                 gbDesc.Visible = false;
                 pictureBox1.Visible = false;
+                lwDetails.Visible = false;
 
                 xmlView.Text = def.xml;
 
@@ -133,20 +154,33 @@ namespace RimDef
                         lwRecipe.Items.Add(new ListViewItem(li));
                     }
 
-                    lwDetail.Items.Clear();
-                    lwDetail.Items.Add(new ListViewItem(new string[] { "Work amount", recipe.work }));
-                    lwDetail.Items.Add(new ListViewItem(new string[] { "Skill requirements", recipe.skill }));
-                    lwDetail.Items.Add(new ListViewItem(new string[] { "Research prerequisite", recipe.research }));
+                    lwDetails.Items.Clear();
+                    lwDetails.Items.Add(new ListViewItem(new string[] { "Work amount", recipe.work }));
+                    lwDetails.Items.Add(new ListViewItem(new string[] { "Skill requirements", recipe.skill }));
+                    lwDetails.Items.Add(new ListViewItem(new string[] { "Research prerequisite", recipe.research }));
 
+                    lwDetails.Size = new System.Drawing.Size(360, 60);
+                    lwDetails.Visible = true;
                     gbRecipe.Visible = true;
                 }
 
                 if (def.defType.ToLower() == "thingdef")
                 {
-                    Console.WriteLine("texture path = " + def.texture);
+                    // Details
+                    lwDetails.Items.Clear();
+                    foreach (string[] row in def.details)
+                    {
+                        lwDetails.Items.Add(new ListViewItem(row));
+                    }
+                    if (lwDetails.Items.Count > 0)
+                    {
+                        lwDetails.Size = new System.Drawing.Size(360, 110);
+                        lwDetails.Visible = true;
+                    }
 
-                    Bitmap image = new Bitmap(RimDef.Properties.Resources.nopic);
-                    
+                    // Texture
+                    Console.WriteLine("texture path = " + def.texture);
+                    Bitmap image = new Bitmap(RimDef.Properties.Resources.nopic);                    
                     if (File.Exists(def.texture))
                     {
                         try
@@ -155,12 +189,12 @@ namespace RimDef
                         }
                         catch (Exception ex) { Console.WriteLine(ex); }
                     }
-
                     pictureBox1.Image = (Image)image;
                     pictureBox1.Visible = true;
                     pictureBox1.Refresh();
                 }
 
+                // Description
                 if (def.description != "")
                 {
                     thingDesc.Text = def.description;

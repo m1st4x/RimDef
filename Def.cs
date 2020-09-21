@@ -1,4 +1,6 @@
-﻿namespace RimDef
+﻿using System.Collections.Generic;
+
+namespace RimDef
 {
     public class Def
     {
@@ -9,5 +11,7 @@
         public string description;
         public string texture;
         public string xml;
+
+        public List<string[]> details = new List<string[]>();
     }
 }
