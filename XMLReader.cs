@@ -11,61 +11,38 @@ namespace RimDef
 
         public List<string> defTypes;
 
-        public List<Def> loadAllDefs(string mod)
+        public List<Def> loadAllDefs(string mod, string dir)
         {
-            Console.WriteLine("loading mod " + mod);
+            Console.WriteLine("loading mod: " + mod);
 
             defTypes = new List<string>();
 
             List<Def> defs = new List<Def>();
 
-            List<string> directories = new List<string>();
-
-            // consider version subdirs
-            string dir1 = modDir + @"/" + mod + @"/Defs/";
-            string dir2 = modDir + @"/" + mod + @"/1.1/Defs/";
-            string dir3 = modDir + @"/" + mod + @"/v1.1/Defs/";
-            string dir4 = modDir + @"/" + mod + @"/1.2/Defs/";
-            string[] dirs = { dir1, dir2, dir3, dir4 };
-            foreach (string dir in dirs)
+            // NOTE: The contents of a Def folder don't follow a clear naming convention, 
+            // but the folder names are generally the same in every mod.
+            // see https://rimworldwiki.com/wiki/Modding_Tutorials/Mod_folder_structure
+            try
             {
-                if (Directory.Exists(dir))
+                string[] files = Directory.GetFiles(dir, "*.xml", SearchOption.AllDirectories);
+                foreach (string file in files)
                 {
-                    foreach (string path in Directory.GetDirectories(dir))
-                    {
-                        directories.Add(path);
-                    }
-                    break;
+                    Console.WriteLine("reading " + file);
+                    defs.AddRange(readXML(mod, file));
                 }
             }
-            //Console.WriteLine(directories.Count + " subdirs found");
-
-            foreach (string dir in directories)
-            {
-                // NOTE: The contents of a Def folder don't follow a clear naming convention, but the folder names are generally the same in every mod.
-                // see https://rimworldwiki.com/wiki/Modding_Tutorials/Mod_folder_structure
-                try
-                {
-                    string[] files = Directory.GetFiles(dir, "*.xml", SearchOption.AllDirectories);
-                    foreach (string filename in files)
-                    {
-                        Console.WriteLine("reading " + filename);
-                        defs.AddRange(readXML(filename, mod));
-                    }
-                }
-                catch (Exception) { }
-            }
+            catch (Exception ex) { Console.WriteLine(ex); }
 
             return defs;
         }
 
-        private List<Def> readXML(string filename, string mod)
+        private List<Def> readXML(string mod, string file)
         {
             List<Def> xmlDefs = new List<Def>();
             try
             {
                 var doc = new XmlDocument();
-                doc.Load(filename);
+                doc.Load(file);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Defs"))
                 {
                     foreach (XmlNode child in node.ChildNodes)
@@ -101,25 +78,21 @@ namespace RimDef
                                 {
                                     description = child.ChildNodes[i].InnerText;
                                 }
-                                if (name == "graphicData")
+                            }
+
+                            // Texture
+                            XmlNode texNode = child.SelectSingleNode("graphicData/texPath");
+                            if (texNode != null)
+                            {
+                                string texPath = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText;
+                                if (Directory.Exists(texPath))
                                 {
-                                    XmlNodeList graphicData = child.ChildNodes[i].ChildNodes;
-                                    for (int j = 0; j < graphicData.Count; j++)
-                                    {
-                                        if (graphicData[j].Name == "texPath")
-                                        {
-                                            string texPath = modDir + @"/" + mod + @"/Textures/" + graphicData[j].InnerText;
-                                            if (Directory.Exists(texPath))
-                                            {
-                                                string[] files = Directory.GetFiles(texPath, "*.*", SearchOption.AllDirectories);
-                                                texture = files[0];
-                                            }
-                                            else
-                                            {
-                                                texture = modDir + @"/" + mod + @"/Textures/" + graphicData[j].InnerText + ".png";
-                                            }
-                                        }
-                                    }
+                                    string[] files = Directory.GetFiles(texPath, "*.*", SearchOption.AllDirectories);
+                                    texture = files[0];
+                                }
+                                else
+                                {
+                                    texture = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText + ".png";
                                 }
                             }
 
@@ -135,7 +108,7 @@ namespace RimDef
                                 {
                                     foreach (XmlNode stat in statsNode.ChildNodes)
                                     {
-                                        Console.WriteLine(stat.Name + ": " + stat.InnerText);
+                                        //Console.WriteLine(stat.Name + ": " + stat.InnerText);
                                         thing.details.Add(new string[] { stat.Name, stat.InnerText });
                                     }
                                 }
@@ -145,7 +118,7 @@ namespace RimDef
                             if (defType == "recipe")
                             {
                                 RecipeDef recipe = new RecipeDef();
-                                Console.WriteLine("Recipe: " + label);
+                                //Console.WriteLine("Recipe: " + label);
 
                                 // <products>
                                 string products = "";
@@ -154,7 +127,7 @@ namespace RimDef
                                 {
                                     foreach (XmlNode p in n.ChildNodes)
                                     {
-                                        Console.WriteLine(p.Name + " # " + p.InnerXml);
+                                        //Console.WriteLine(p.Name + " # " + p.InnerXml);
                                         products += p.InnerXml + "x " + p.Name;
                                     }
                                 }

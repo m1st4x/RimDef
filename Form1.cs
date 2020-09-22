@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using SimpleSearch;
 
@@ -13,6 +14,8 @@ namespace RimDef
 
         List<Def> defs = new List<Def>();
         List<Def> defsView = new List<Def>();
+
+        Dictionary<string, string> defdirs = new Dictionary<string, string>();
 
         private System.Windows.Forms.ListView lwDetails = new System.Windows.Forms.ListView();
 
@@ -64,10 +67,25 @@ namespace RimDef
                 {
                     string[] split = dir.Split('\\');
                     string name = split[split.Length - 1];
-                    lbMods.Items.Add(name);
+                    //lbMods.Items.Add(name);
 
-                    // depending on the number of mods, this can take very long.
-                    //defs.AddRange(xmlReader.loadAllDefs(name));
+                    string defdir = dir + @"/Defs/";
+                    if (Directory.Exists(defdir))
+                    {
+                        defdirs.Add(name, defdir);
+                        lbMods.Items.Add(name);
+                    }
+                    // consider version subdirs
+                    string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2" };
+                    foreach (string ver in versions)
+                    {
+                        defdir = dir + "/" + ver + @"/Defs/";
+                        if (Directory.Exists(defdir))
+                        {
+                            defdirs.Add(name + "*" + ver, defdir);
+                            lbMods.Items.Add(name + " (" + ver + ")");
+                        }
+                    }
                 }
             }
             catch (Exception ex) { Console.WriteLine("Error loading modlist: " + ex); }
@@ -75,11 +93,15 @@ namespace RimDef
 
         private void lbMods_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string mod = lbMods.Items[lbMods.SelectedIndex].ToString();
+            string mod = defdirs.ElementAt(lbMods.SelectedIndex).Key;
+            string moddir = mod.Split('*')[0]; // remove version string
+            string path = defdirs.ElementAt(lbMods.SelectedIndex).Value;
+            defs = xmlReader.loadAllDefs(moddir, path);
 
-            defs = xmlReader.loadAllDefs(mod);
+            // depending on the number of mods, this can take very long.
+            //defs.AddRange(xmlReader.loadAllDefs(name));
+
             defsView = defs;
-            //defsView = xmlReader.loadAllDefs(mod);
 
             lwDefs.Items.Clear();
             lwDefs.Columns.Clear();
@@ -97,8 +119,7 @@ namespace RimDef
 
             foreach (Def def in defs)
             {
-                string[] items = { def.defType, def.defName, def.label };
-                var listViewItem = new ListViewItem(items);
+                var listViewItem = new ListViewItem(new string[] { def.defType, def.defName, def.label });
                 listViewItem.ToolTipText = "tooltip test";
                 lwDefs.Items.Add(listViewItem);
             }
