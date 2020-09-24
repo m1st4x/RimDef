@@ -15,15 +15,15 @@ namespace RimDef
         List<Def> defs = new List<Def>();
         List<Def> defsView = new List<Def>();
 
-        Dictionary<string, string> defdirs = new Dictionary<string, string>();
+        Dictionary<string, string> defdirs;
 
-        private System.Windows.Forms.ListView lwDetails = new System.Windows.Forms.ListView();
+        private ListView lwDetails = new ListView();
 
         public Form1()
         {
             InitializeComponent();
 
-            txtModDir.Text = @"C:\Games\RimWorld Royalty\Mods";
+            txtModDir.Text = @"C:\Games\RimWorld Royalty";
 
             lwRecipe.Columns.Add("amount", 50);
             lwRecipe.Columns.Add("ingredient", 200);
@@ -49,25 +49,31 @@ namespace RimDef
             this.Controls.Add(this.lwDetails);
         }
 
-        private void loadModList(string path)
+        private void loadModList(string rimDir)
         {
-            xmlReader.modDir = path;
-
             defs.Clear();
             lbMods.Items.Clear();
             lbDefTypes.Items.Clear();
             lwDefs.Items.Clear();
-            gbRecipe.Visible = false;
+            xmlView.Clear();
             gbDesc.Visible = false;
+            gbRecipe.Visible = false;
             pictureBox1.Visible = false;
+
+            defdirs = new Dictionary<string, string>();
+            string modDir = rimDir + "/Mods";
+            xmlReader.modDir = modDir;
+
+            // Core defs directory (since rw 1.1)
+            defdirs.Add("Core", rimDir + "/Data/Core/Defs");
+            lbMods.Items.Add("Core");
 
             try
             {
-                foreach (string dir in Directory.GetDirectories(path))
+                foreach (string dir in Directory.GetDirectories(modDir))
                 {
                     string[] split = dir.Split('\\');
                     string name = split[split.Length - 1];
-                    //lbMods.Items.Add(name);
 
                     string defdir = dir + @"/Defs/";
                     if (Directory.Exists(defdir))
@@ -96,11 +102,9 @@ namespace RimDef
             string mod = defdirs.ElementAt(lbMods.SelectedIndex).Key;
             string moddir = mod.Split('*')[0]; // remove version string
             string path = defdirs.ElementAt(lbMods.SelectedIndex).Value;
+
+            // reading all defs from selected mod
             defs = xmlReader.loadAllDefs(moddir, path);
-
-            // depending on the number of mods, this can take very long.
-            //defs.AddRange(xmlReader.loadAllDefs(name));
-
             defsView = defs;
 
             lwDefs.Items.Clear();

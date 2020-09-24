@@ -84,6 +84,9 @@ namespace RimDef
                             XmlNode texNode = child.SelectSingleNode("graphicData/texPath");
                             if (texNode != null)
                             {
+                                // core textures
+                                // https://ludeon.com/forums/index.php?topic=2325
+
                                 string texPath = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText;
                                 if (Directory.Exists(texPath))
                                 {
@@ -108,7 +111,6 @@ namespace RimDef
                                 {
                                     foreach (XmlNode stat in statsNode.ChildNodes)
                                     {
-                                        //Console.WriteLine(stat.Name + ": " + stat.InnerText);
                                         thing.details.Add(new string[] { stat.Name, stat.InnerText });
                                     }
                                 }
@@ -118,7 +120,6 @@ namespace RimDef
                             if (defType == "recipe")
                             {
                                 RecipeDef recipe = new RecipeDef();
-                                //Console.WriteLine("Recipe: " + label);
 
                                 // <products>
                                 string products = "";
@@ -127,7 +128,6 @@ namespace RimDef
                                 {
                                     foreach (XmlNode p in n.ChildNodes)
                                     {
-                                        //Console.WriteLine(p.Name + " # " + p.InnerXml);
                                         products += p.InnerXml + "x " + p.Name;
                                     }
                                 }
