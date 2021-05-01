@@ -70,10 +70,21 @@ namespace RimDef
 
             try
             {
+                List<string> activeMods = xmlReader.readModConfig();
+
                 foreach (string dir in Directory.GetDirectories(modDir))
                 {
                     string[] split = dir.Split('\\');
                     string name = split[split.Length - 1];
+
+                    if (cbOnlyActiveMods.Checked)
+                    {                        
+                        string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                        if (!activeMods.Contains(packageId))
+                        {
+                            continue;
+                        }
+                    }
 
                     string defdir = dir + @"/Defs/";
                     if (Directory.Exists(defdir))
@@ -285,5 +296,15 @@ namespace RimDef
 
         private void Form1_Load(object sender, EventArgs e)
         { }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

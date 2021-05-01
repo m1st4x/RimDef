@@ -36,6 +36,28 @@ namespace RimDef
             return defs;
         }
 
+        public List<string> readModConfig()
+        {
+            List<string> activeMods = new List<string>();
+            string path = Environment.ExpandEnvironmentVariables("%USERPROFILE%/Appdata/LocalLow/Ludeon Studios/RimWorld by Ludeon Studios/Config/ModsConfig.xml");
+            var doc = new XmlDocument();
+            doc.Load(path);
+            foreach (XmlNode node in doc.DocumentElement.SelectNodes("/ModsConfigData/activeMods/li"))
+                activeMods.Add(node.InnerText);
+            return activeMods;
+        }
+
+        public string readPackageId(string file)
+        {
+            string packageId = "";
+            var doc = new XmlDocument();
+            doc.Load(file);
+            XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/packageId");
+            if (node != null)
+                packageId = node.InnerText.ToLower();
+            return packageId;
+        }
+
         private List<Def> readXML(string mod, string file)
         {
             List<Def> xmlDefs = new List<Def>();
