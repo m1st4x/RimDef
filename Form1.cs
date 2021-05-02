@@ -74,33 +74,47 @@ namespace RimDef
 
                 foreach (string dir in Directory.GetDirectories(modDir))
                 {
+                    if (cbOnlyActiveMods.Checked)
+                    {
+                        string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                        if (!activeMods.Contains(packageId)) continue;
+                    }
+
                     string[] split = dir.Split('\\');
                     string name = split[split.Length - 1];
 
-                    if (cbOnlyActiveMods.Checked)
-                    {                        
-                        string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
-                        if (!activeMods.Contains(packageId))
-                        {
-                            continue;
-                        }
+                    Dictionary<string, string> defdirsTmp = new Dictionary<string, string>();
+                    Tuple<string, string> latest = null;
+
+                    string path = dir + @"/Defs/";
+                    if (Directory.Exists(path))
+                    {
+                        latest = new Tuple<string, string>(name, path);
+                        defdirsTmp.Add(name, path);
                     }
 
-                    string defdir = dir + @"/Defs/";
-                    if (Directory.Exists(defdir))
-                    {
-                        defdirs.Add(name, defdir);
-                        lbMods.Items.Add(name);
-                    }
-                    // consider version subdirs
                     string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2" };
                     foreach (string ver in versions)
                     {
-                        defdir = dir + "/" + ver + @"/Defs/";
-                        if (Directory.Exists(defdir))
+                        path = dir + "/" + ver + @"/Defs/";
+                        if (Directory.Exists(path))
                         {
-                            defdirs.Add(name + "*" + ver, defdir);
-                            lbMods.Items.Add(name + " (" + ver + ")");
+                            latest = new Tuple<string, string>(name + "*" + ver, path);
+                            defdirsTmp.Add(latest.Item1, latest.Item2);
+                        }
+                    }
+
+                    if (cbLatestVersion.Checked && latest != null)
+                    {
+                        defdirs.Add(latest.Item1, latest.Item2);
+                        lbMods.Items.Add(latest.Item1);
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<string, string> entry in defdirsTmp)
+                        {
+                            defdirs.Add(entry.Key, entry.Value);
+                            lbMods.Items.Add(entry.Key);
                         }
                     }
                 }
