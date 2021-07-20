@@ -53,7 +53,7 @@ namespace RimDef
         {
             defs.Clear();
             lbMods.Items.Clear();
-            lbDefTypes.Items.Clear();
+            lbDefTypes.DataSource = null;
             lwDefs.Items.Clear();
             xmlView.Clear();
             gbDesc.Visible = false;
@@ -136,7 +136,7 @@ namespace RimDef
 
             lwDefs.Items.Clear();
             lwDefs.Columns.Clear();
-            lbDefTypes.Items.Clear();
+            lbDefTypes.DataSource = null;
             xmlView.Clear();
             gbDesc.Visible = false;
             gbRecipe.Visible = false;
