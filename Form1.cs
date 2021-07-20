@@ -124,6 +124,8 @@ namespace RimDef
 
         private void lbMods_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (lbMods.SelectedIndex != 0) return;
+
             string mod = defdirs.ElementAt(lbMods.SelectedIndex).Key;
             string moddir = mod.Split('*')[0]; // remove version string
             string path = defdirs.ElementAt(lbMods.SelectedIndex).Value;
