@@ -148,13 +148,6 @@ namespace RimDef
             lwDefs.Columns.Add("Name", 120);
             lwDefs.Columns.Add("Label", 150);
 
-            foreach (Def def in defs)
-            {
-                var listViewItem = new ListViewItem(new string[] { def.defType, def.defName, def.label });
-                listViewItem.ToolTipText = "tooltip test";
-                lwDefs.Items.Add(listViewItem);
-            }
-
             xmlReader.defTypes.Sort();
             lbDefTypes.DataSource = xmlReader.defTypes;
         }
