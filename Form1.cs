@@ -154,11 +154,9 @@ namespace RimDef
                 listViewItem.ToolTipText = "tooltip test";
                 lwDefs.Items.Add(listViewItem);
             }
-            
-            foreach (string item in xmlReader.defTypes)
-            {
-                lbDefTypes.Items.Add(item);
-            }
+
+            xmlReader.defTypes.Sort();
+            lbDefTypes.DataSource = xmlReader.defTypes;
         }
 
         // Filter defs from loaded mod ListBox
