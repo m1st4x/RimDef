@@ -159,6 +159,7 @@ namespace RimDef
             }
         }
 
+        // Filter defs from loaded mod ListBox
         private void lbDefTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbDefTypes.SelectedIndices.Count > 0)
@@ -299,12 +300,15 @@ namespace RimDef
             s.Stop();
             model.TimeTaken = s.Elapsed;
 
+            defsView.Clear();
+
             foreach (SearchResult result in model.Results)
             {
                 Def def = result.Definition;
                 string[] items = { def.modName, def.defType, def.defName, def.label };
                 var listViewItem = new ListViewItem(items);
                 lwDefs.Items.Add(listViewItem);
+                defsView.Add(def);
             }
         }
 
