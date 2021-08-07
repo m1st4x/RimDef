@@ -61,60 +61,101 @@ namespace RimDef
             pictureBox1.Visible = false;
 
             defdirs = new Dictionary<string, string>();
-            string modDir = rimDir + "/Mods";
-            xmlReader.modDir = modDir;
 
-            // Core defs directory (since rw 1.1)
-            defdirs.Add("Core", rimDir + "/Data/Core/Defs");
-            lbMods.Items.Add("Core");
+            string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2" };
 
             try
             {
                 List<string> activeMods = xmlReader.readModConfig();
 
-                foreach (string dir in Directory.GetDirectories(modDir))
+                if (rimDir.Contains("294100")) // steam version
                 {
-                    if (cbOnlyActiveMods.Checked)
+                    //TODO core on steam
+                    // Core defs directory (since rw 1.1)
+                    //defdirs.Add("Core", rimDir + "/Data/Core/Defs");
+                    //lbMods.Items.Add("Core");
+
+                    xmlReader.modDir = rimDir;
+
+                    foreach (string dir in Directory.GetDirectories(rimDir))
                     {
-                        string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
-                        if (!activeMods.Contains(packageId)) continue;
+                        Dictionary<string, string> defdirsTmp = new Dictionary<string, string>();
+                        Tuple<string, string> latest = null;
+
+                        if (cbOnlyActiveMods.Checked)
+                        {
+                            string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                            if (!activeMods.Contains(packageId)) continue;
+                        }
+
+                        string modName = xmlReader.readModName(dir + @"/About/About.xml");
+
+                        foreach (string ver in versions)
+                        {
+                            string defPath = dir + "/" + ver + @"/Defs/";
+                            if (Directory.Exists(defPath))
+                            {
+                                latest = new Tuple<string, string>(modName + "*" + ver, defPath);
+                                defdirsTmp.Add(latest.Item1, latest.Item2);
+                            }
+                        }
+
+                        defdirs.Add(modName, dir + @"/Defs/");
+                        lbMods.Items.Add(modName);
                     }
+                }
+                else // non-steam version
+                {
+                    // Core defs directory (since rw 1.1)
+                    defdirs.Add("Core", rimDir + "/Data/Core/Defs");
+                    lbMods.Items.Add("Core");
 
-                    string[] split = dir.Split('\\');
-                    string name = split[split.Length - 1];
+                    string modDir = rimDir + "/Mods";
+                    xmlReader.modDir = modDir;
 
-                    Dictionary<string, string> defdirsTmp = new Dictionary<string, string>();
-                    Tuple<string, string> latest = null;
-
-                    string path = dir + @"/Defs/";
-                    if (Directory.Exists(path))
+                    foreach (string dir in Directory.GetDirectories(modDir))
                     {
-                        latest = new Tuple<string, string>(name, path);
-                        defdirsTmp.Add(name, path);
-                    }
+                        Dictionary<string, string> defdirsTmp = new Dictionary<string, string>();
+                        Tuple<string, string> latest = null;
 
-                    string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2" };
-                    foreach (string ver in versions)
-                    {
-                        path = dir + "/" + ver + @"/Defs/";
+                        if (cbOnlyActiveMods.Checked)
+                        {
+                            string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                            if (!activeMods.Contains(packageId)) continue;
+                        }
+
+                        string[] split = dir.Split('\\');
+                        string name = split[split.Length - 1];
+
+                        string path = dir + @"/Defs/";
                         if (Directory.Exists(path))
                         {
-                            latest = new Tuple<string, string>(name + "*" + ver, path);
-                            defdirsTmp.Add(latest.Item1, latest.Item2);
+                            latest = new Tuple<string, string>(name, path);
+                            defdirsTmp.Add(name, path);
                         }
-                    }
 
-                    if (cbLatestVersion.Checked && latest != null)
-                    {
-                        defdirs.Add(latest.Item1, latest.Item2);
-                        lbMods.Items.Add(latest.Item1);
-                    }
-                    else
-                    {
-                        foreach (KeyValuePair<string, string> entry in defdirsTmp)
+                        foreach (string ver in versions)
                         {
-                            defdirs.Add(entry.Key, entry.Value);
-                            lbMods.Items.Add(entry.Key);
+                            path = dir + "/" + ver + @"/Defs/";
+                            if (Directory.Exists(path))
+                            {
+                                latest = new Tuple<string, string>(name + "*" + ver, path);
+                                defdirsTmp.Add(latest.Item1, latest.Item2);
+                            }
+                        }
+
+                        if (cbLatestVersion.Checked && latest != null)
+                        {
+                            defdirs.Add(latest.Item1, latest.Item2);
+                            lbMods.Items.Add(latest.Item1);
+                        }
+                        else
+                        {
+                            foreach (KeyValuePair<string, string> entry in defdirsTmp)
+                            {
+                                defdirs.Add(entry.Key, entry.Value);
+                                lbMods.Items.Add(entry.Key);
+                            }
                         }
                     }
                 }
@@ -311,14 +352,5 @@ namespace RimDef
         private void Form1_Load(object sender, EventArgs e)
         { }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -49,13 +49,24 @@ namespace RimDef
 
         public string readPackageId(string file)
         {
-            string packageId = "";
+            string packageId = "-undefined-";
             var doc = new XmlDocument();
             doc.Load(file);
             XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/packageId");
             if (node != null)
                 packageId = node.InnerText.ToLower();
             return packageId;
+        }
+
+        public string readModName(string file)
+        {
+            string modName = "-undefined-";
+            var doc = new XmlDocument();
+            doc.Load(file);
+            XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/name");
+            if (node != null)
+                modName = node.InnerText.ToLower();
+            return modName;
         }
 
         private List<Def> readXML(string mod, string file)
