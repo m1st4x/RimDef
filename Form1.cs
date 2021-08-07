@@ -62,7 +62,7 @@ namespace RimDef
 
             defdirs = new Dictionary<string, string>();
 
-            string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2" };
+            string[] versions = { "1.0", "1.1", "1.1-1.2", "1.2", "1.3" };
 
             try
             {
