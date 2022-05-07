@@ -11,9 +11,9 @@ namespace RimDef
 
         public List<string> defTypes;
 
-        public List<Def> loadAllDefs(string mod, string dir)
+        public List<Def> loadAllDefs(Mod mod)
         {
-            Console.WriteLine("loading mod: " + mod);
+            Console.WriteLine("loading mod: " + mod.name);
 
             defTypes = new List<string>();
 
@@ -24,11 +24,11 @@ namespace RimDef
             // see https://rimworldwiki.com/wiki/Modding_Tutorials/Mod_folder_structure
             try
             {
-                string[] files = Directory.GetFiles(dir, "*.xml", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(mod.dir, "*.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine("reading " + file);
-                    defs.AddRange(readXML(mod, file));
+                    defs.AddRange(readXML(mod.name, mod.dir, file));
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex); }
@@ -69,7 +69,7 @@ namespace RimDef
             return modName;
         }
 
-        private List<Def> readXML(string mod, string file)
+        private List<Def> readXML(string modName, string dir, string file)
         {
             List<Def> xmlDefs = new List<Def>();
             try
@@ -120,7 +120,8 @@ namespace RimDef
                                 // core textures
                                 // https://ludeon.com/forums/index.php?topic=2325
 
-                                string texPath = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText;
+                                //string texPath = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText;
+                                string texPath = dir + @"/Textures/" + texNode.InnerText;
                                 if (Directory.Exists(texPath))
                                 {
                                     string[] files = Directory.GetFiles(texPath, "*.*", SearchOption.AllDirectories);
@@ -128,7 +129,8 @@ namespace RimDef
                                 }
                                 else
                                 {
-                                    texture = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText + ".png";
+                                    //texture = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText + ".png";
+                                    texture = dir + @"/Textures/" + texNode.InnerText + ".png";
                                 }
                             }
 
@@ -213,7 +215,7 @@ namespace RimDef
                                 def = recipe;
                             }
 
-                            def.modName = mod;
+                            def.modName = modName;
                             def.defType = type;
                             def.defName = defName;
                             def.label = label;

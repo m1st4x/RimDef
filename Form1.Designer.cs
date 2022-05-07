@@ -60,16 +60,16 @@
             this.lbMods.FormattingEnabled = true;
             this.lbMods.Location = new System.Drawing.Point(19, 100);
             this.lbMods.Name = "lbMods";
-            this.lbMods.Size = new System.Drawing.Size(151, 186);
+            this.lbMods.Size = new System.Drawing.Size(227, 186);
             this.lbMods.TabIndex = 0;
             this.lbMods.SelectedIndexChanged += new System.EventHandler(this.lbMods_SelectedIndexChanged);
             // 
             // lbDefTypes
             // 
             this.lbDefTypes.FormattingEnabled = true;
-            this.lbDefTypes.Location = new System.Drawing.Point(188, 99);
+            this.lbDefTypes.Location = new System.Drawing.Point(261, 100);
             this.lbDefTypes.Name = "lbDefTypes";
-            this.lbDefTypes.Size = new System.Drawing.Size(120, 186);
+            this.lbDefTypes.Size = new System.Drawing.Size(158, 186);
             this.lbDefTypes.TabIndex = 1;
             this.lbDefTypes.SelectedIndexChanged += new System.EventHandler(this.lbDefTypes_SelectedIndexChanged);
             // 
@@ -184,7 +184,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(184, 83);
+            this.label2.Location = new System.Drawing.Point(258, 84);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
             this.label2.TabIndex = 13;
@@ -243,7 +243,7 @@
             // 
             this.cbOnlyActiveMods.AutoSize = true;
             this.cbOnlyActiveMods.Location = new System.Drawing.Point(18, 55);
-            this.cbOnlyActiveMods.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbOnlyActiveMods.Margin = new System.Windows.Forms.Padding(2);
             this.cbOnlyActiveMods.Name = "cbOnlyActiveMods";
             this.cbOnlyActiveMods.Size = new System.Drawing.Size(83, 17);
             this.cbOnlyActiveMods.TabIndex = 21;
@@ -254,7 +254,7 @@
             // 
             this.cbLatestVersion.AutoSize = true;
             this.cbLatestVersion.Location = new System.Drawing.Point(101, 55);
-            this.cbLatestVersion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLatestVersion.Margin = new System.Windows.Forms.Padding(2);
             this.cbLatestVersion.Name = "cbLatestVersion";
             this.cbLatestVersion.Size = new System.Drawing.Size(88, 17);
             this.cbLatestVersion.TabIndex = 22;
