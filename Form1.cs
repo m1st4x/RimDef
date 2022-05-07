@@ -51,7 +51,7 @@ namespace RimDef
         {
             defs.Clear();
             lbMods.Items.Clear();
-            lbDefTypes.Items.Clear();
+            lbDefTypes.DataSource = null;
             lwDefs.Items.Clear();
             xmlView.Clear();
             gbDesc.Visible = false;
@@ -175,7 +175,7 @@ namespace RimDef
 
             lwDefs.Items.Clear();
             lwDefs.Columns.Clear();
-            lbDefTypes.Items.Clear();
+            lbDefTypes.DataSource = null;
             xmlView.Clear();
             gbDesc.Visible = false;
             gbRecipe.Visible = false;
@@ -187,19 +187,11 @@ namespace RimDef
             lwDefs.Columns.Add("Name", 120);
             lwDefs.Columns.Add("Label", 150);
 
-            foreach (Def def in defs)
-            {
-                var listViewItem = new ListViewItem(new string[] { def.defType, def.defName, def.label });
-                listViewItem.ToolTipText = "tooltip test";
-                lwDefs.Items.Add(listViewItem);
-            }
-            
-            foreach (string item in xmlReader.defTypes)
-            {
-                lbDefTypes.Items.Add(item);
-            }
+            xmlReader.defTypes.Sort();
+            lbDefTypes.DataSource = xmlReader.defTypes;
         }
 
+        // Filter defs from loaded mod ListBox
         private void lbDefTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbDefTypes.SelectedIndices.Count > 0)
@@ -340,12 +332,15 @@ namespace RimDef
             s.Stop();
             model.TimeTaken = s.Elapsed;
 
+            defsView.Clear();
+
             foreach (SearchResult result in model.Results)
             {
                 Def def = result.Definition;
                 string[] items = { def.modName, def.defType, def.defName, def.label };
                 var listViewItem = new ListViewItem(items);
                 lwDefs.Items.Add(listViewItem);
+                defsView.Add(def);
             }
         }
 
