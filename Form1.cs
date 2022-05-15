@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SimpleSearch;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using SimpleSearch;
 
 namespace RimDef
 {
@@ -169,7 +168,7 @@ namespace RimDef
         private void lbMods_SelectedIndexChanged(object sender, EventArgs e)
         {
             // reading all defs from selected mod
-            Mod mod = (Mod) lbMods.SelectedItem;
+            Mod mod = (Mod)lbMods.SelectedItem;
             defs = xmlReader.loadAllDefs(mod);
             defsView = defs;
 
@@ -187,7 +186,7 @@ namespace RimDef
             lwDefs.Columns.Add("Name", 120);
             lwDefs.Columns.Add("Label", 150);
 
-            xmlReader.defTypes.Sort();
+            //xmlReader.defTypes.Sort();
             lbDefTypes.DataSource = xmlReader.defTypes;
         }
 
@@ -223,12 +222,14 @@ namespace RimDef
                 gbDesc.Visible = false;
                 pictureBox1.Visible = false;
                 lwDetails.Visible = false;
+                cbDisable.Visible = false;
 
+                lblPath.Text = def.file;
                 xmlView.Text = def.xml;
 
                 if (def.defType.ToLower() == "recipedef")
                 {
-                    RecipeDef recipe = (RecipeDef) def;
+                    RecipeDef recipe = (RecipeDef)def;
 
                     lwRecipe.Items.Clear();
 
@@ -263,7 +264,7 @@ namespace RimDef
 
                     // Texture
                     Console.WriteLine("texture path = " + def.texture);
-                    Bitmap image = new Bitmap(RimDef.Properties.Resources.nopic);                    
+                    Bitmap image = new Bitmap(RimDef.Properties.Resources.nopic);
                     if (File.Exists(def.texture))
                     {
                         try
@@ -275,6 +276,9 @@ namespace RimDef
                     pictureBox1.Image = (Image)image;
                     pictureBox1.Visible = true;
                     pictureBox1.Refresh();
+
+                    cbDisable.Visible = true;
+                    cbDisable.Checked = def.disabled;
                 }
 
                 // Description
@@ -342,6 +346,18 @@ namespace RimDef
                 lwDefs.Items.Add(listViewItem);
                 defsView.Add(def);
             }
+        }
+
+        private void cbDisable_CheckedChanged(object sender, EventArgs e)
+        {
+            Def def = defsView[lwDefs.SelectedIndices[0]];
+            if (cbDisable.Checked)
+            {
+                Console.WriteLine(def.file);
+                xmlReader.disableNode(def);
+            }
+            else
+                xmlReader.enableNode(def);
         }
 
         private void Form1_Load(object sender, EventArgs e)

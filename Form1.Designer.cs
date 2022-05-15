@@ -50,6 +50,8 @@
             this.gbRecipe = new System.Windows.Forms.GroupBox();
             this.cbOnlyActiveMods = new System.Windows.Forms.CheckBox();
             this.cbLatestVersion = new System.Windows.Forms.CheckBox();
+            this.cbDisable = new System.Windows.Forms.CheckBox();
+            this.lblPath = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -261,11 +263,33 @@
             this.cbLatestVersion.Text = "latest version";
             this.cbLatestVersion.UseVisualStyleBackColor = true;
             // 
+            // cbDisable
+            // 
+            this.cbDisable.AutoSize = true;
+            this.cbDisable.Location = new System.Drawing.Point(440, 570);
+            this.cbDisable.Name = "cbDisable";
+            this.cbDisable.Size = new System.Drawing.Size(67, 17);
+            this.cbDisable.TabIndex = 23;
+            this.cbDisable.Text = "Disabled";
+            this.cbDisable.UseVisualStyleBackColor = true;
+            this.cbDisable.Visible = false;
+            this.cbDisable.CheckedChanged += new System.EventHandler(this.cbDisable_CheckedChanged);
+            // 
+            // lblPath
+            // 
+            this.lblPath.AutoSize = true;
+            this.lblPath.Location = new System.Drawing.Point(474, 15);
+            this.lblPath.Name = "lblPath";
+            this.lblPath.Size = new System.Drawing.Size(0, 13);
+            this.lblPath.TabIndex = 24;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(834, 631);
+            this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.Controls.Add(this.lblPath);
+            this.Controls.Add(this.cbDisable);
             this.Controls.Add(this.cbLatestVersion);
             this.Controls.Add(this.cbOnlyActiveMods);
             this.Controls.Add(this.gbRecipe);
@@ -321,6 +345,8 @@
         private System.Windows.Forms.GroupBox gbRecipe;
         private System.Windows.Forms.CheckBox cbOnlyActiveMods;
         private System.Windows.Forms.CheckBox cbLatestVersion;
+        private System.Windows.Forms.CheckBox cbDisable;
+        private System.Windows.Forms.Label lblPath;
     }
 }
 

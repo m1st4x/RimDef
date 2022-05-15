@@ -72,9 +72,11 @@ namespace RimDef
         private List<Def> readXML(string modName, string dir, string file)
         {
             List<Def> xmlDefs = new List<Def>();
+            string[] orientations = { "_north", "_south", "_west", "_east" };
+
+            var doc = new XmlDocument();
             try
             {
-                var doc = new XmlDocument();
                 doc.Load(file);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Defs"))
                 {
@@ -120,7 +122,6 @@ namespace RimDef
                                 // core textures
                                 // https://ludeon.com/forums/index.php?topic=2325
 
-                                //string texPath = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText;
                                 string texPath = dir + @"/Textures/" + texNode.InnerText;
                                 if (Directory.Exists(texPath))
                                 {
@@ -129,8 +130,21 @@ namespace RimDef
                                 }
                                 else
                                 {
-                                    //texture = modDir + @"/" + mod + @"/Textures/" + texNode.InnerText + ".png";
                                     texture = dir + @"/Textures/" + texNode.InnerText + ".png";
+                                    if (!File.Exists(texture))
+                                    {
+                                        //Console.WriteLine(texture + " does not exist");
+                                        foreach (string ori in orientations)
+                                        {
+                                            string textureOri = dir + @"/Textures/" + texNode.InnerText + ori + ".png";
+                                            if (File.Exists(textureOri))
+                                            {
+                                                texture = textureOri;
+                                                //Console.WriteLine(texture + " added");
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -221,6 +235,8 @@ namespace RimDef
                             def.label = label;
                             def.description = description;
                             def.texture = texture;
+                            def.file = file; // TODO wrong version dir /1.x/
+                            def.disabled = false;
 
                             // XML view
                             string xmlOut = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString();
@@ -236,7 +252,98 @@ namespace RimDef
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
+            try
+            {
+                // read defs disabled by comment <!-- -->
+                foreach (XmlNode comment in doc.SelectNodes("//comment()"))
+                {
+                    //Console.WriteLine("\ncomment: " + comment.InnerText + "\n");
+                    string xml = comment.InnerText;
+                    if (!xml.StartsWith("<")) xml = "<" + xml + ">";
+                    XmlReader nodeReader = XmlReader.Create(new StringReader(xml));
+                    XmlNode newNode = doc.ReadNode(nodeReader);
+
+                    XmlNode defName = newNode.SelectSingleNode("defName");
+                    if (defName != null)
+                    {
+                        Def disabledDef = new Def();
+                        disabledDef.modName = modName;
+                        disabledDef.defType = newNode.Name;
+                        disabledDef.defName = defName.InnerText;
+                        disabledDef.label = "(Disabled) ";
+                        XmlNode labelNode = newNode.SelectSingleNode("label");
+                        if (labelNode != null) disabledDef.label += labelNode.InnerText;
+                        disabledDef.file = file;
+                        disabledDef.disabled = true;
+                        xmlDefs.Add(disabledDef);
+                        Console.WriteLine("Disabled definition added.");
+                    }
+                }
+            }
+            catch (Exception) { Console.WriteLine("XMLReader: invalid comment."); }
+
             return xmlDefs;
         }
+
+        public void disableNode(Def def)
+        {
+            try
+            {
+                // backup file
+                string backup = def.file + ".ori";
+                if (!File.Exists(def.file))
+                    File.Copy(def.file, backup);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+            try
+            {
+                // comment out xml
+                var doc = new XmlDocument();
+                doc.Load(def.file);
+                XmlNode node = doc.DocumentElement.SelectSingleNode("ThingDef[defName='" + def.defName + "']");
+                if (node != null)
+                {
+                    XmlComment comment = doc.CreateComment(node.OuterXml);
+                    //Console.WriteLine(comment.OuterXml);
+                    XmlNode parent = node.ParentNode;
+                    parent.ReplaceChild(comment, node);
+                    doc.Save(def.file);
+                    def.disabled = true;
+                    Console.WriteLine("'" + def.defName + "' disabled.");
+                }
+                else
+                {
+                    Console.WriteLine("'" + def.defName + "' not found.");
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+        }
+
+        public void enableNode(Def def)
+        {
+            var doc = new XmlDocument();
+            doc.Load(def.file);
+            foreach (XmlNode comment in doc.SelectNodes("//comment()"))
+            {
+                string xml = comment.InnerText;
+                if (!xml.StartsWith("<")) xml = "<" + xml + ">";
+                XmlReader nodeReader = XmlReader.Create(new StringReader(xml));
+                XmlNode newNode = doc.ReadNode(nodeReader);
+                Console.WriteLine("enable: " + newNode.OuterXml);
+
+                XmlNode defName = newNode.SelectSingleNode("defName");
+                if (defName != null && defName.InnerText == def.defName)
+                {
+                    XmlNode parent = comment.ParentNode;
+                    parent.ReplaceChild(newNode, comment);
+                    doc.Save(def.file);
+                    def.disabled = false;
+                    Console.WriteLine("'" + def.defName + "' enabled.");
+                    break;
+                }
+            }
+        }
+
     }
 }
