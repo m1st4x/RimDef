@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace RimDef
 {
-    class Mod
+    public class Mod
     {
         public string name;
         public string packageId;
+        public string version;
         public string dir;
         public string defPath;
 

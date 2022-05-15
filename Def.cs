@@ -4,7 +4,8 @@ namespace RimDef
 {
     public class Def
     {
-        public string modName;
+        public Mod mod;
+
         public string defType;
         public string defName;
         public string label;

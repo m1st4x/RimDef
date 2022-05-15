@@ -24,11 +24,12 @@ namespace RimDef
             // see https://rimworldwiki.com/wiki/Modding_Tutorials/Mod_folder_structure
             try
             {
-                string[] files = Directory.GetFiles(mod.dir, "*.xml", SearchOption.AllDirectories);
+                string path = mod.dir + "/" + mod.version;
+                string[] files = Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine("reading " + file);
-                    defs.AddRange(readXML(mod.name, mod.dir, file));
+                    defs.AddRange(readXML(mod, file));
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex); }
@@ -69,7 +70,7 @@ namespace RimDef
             return modName;
         }
 
-        private List<Def> readXML(string modName, string dir, string file)
+        private List<Def> readXML(Mod mod, string file)
         {
             List<Def> xmlDefs = new List<Def>();
             string[] orientations = { "_north", "_south", "_west", "_east" };
@@ -122,7 +123,7 @@ namespace RimDef
                                 // core textures
                                 // https://ludeon.com/forums/index.php?topic=2325
 
-                                string texPath = dir + @"/Textures/" + texNode.InnerText;
+                                string texPath = mod.dir + @"/Textures/" + texNode.InnerText;
                                 if (Directory.Exists(texPath))
                                 {
                                     string[] files = Directory.GetFiles(texPath, "*.*", SearchOption.AllDirectories);
@@ -130,13 +131,13 @@ namespace RimDef
                                 }
                                 else
                                 {
-                                    texture = dir + @"/Textures/" + texNode.InnerText + ".png";
+                                    texture = mod.dir + @"/Textures/" + texNode.InnerText + ".png";
                                     if (!File.Exists(texture))
                                     {
                                         //Console.WriteLine(texture + " does not exist");
                                         foreach (string ori in orientations)
                                         {
-                                            string textureOri = dir + @"/Textures/" + texNode.InnerText + ori + ".png";
+                                            string textureOri = mod.dir + @"/Textures/" + texNode.InnerText + ori + ".png";
                                             if (File.Exists(textureOri))
                                             {
                                                 texture = textureOri;
@@ -229,7 +230,7 @@ namespace RimDef
                                 def = recipe;
                             }
 
-                            def.modName = modName;
+                            def.mod = mod;
                             def.defType = type;
                             def.defName = defName;
                             def.label = label;
@@ -267,7 +268,7 @@ namespace RimDef
                     if (defName != null)
                     {
                         Def disabledDef = new Def();
-                        disabledDef.modName = modName;
+                        disabledDef.mod = mod;
                         disabledDef.defType = newNode.Name;
                         disabledDef.defName = defName.InnerText;
                         disabledDef.label = "(Disabled) ";

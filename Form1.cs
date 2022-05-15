@@ -141,6 +141,7 @@ namespace RimDef
                             {
                                 Mod mod = new Mod(modName + "*" + ver);
                                 mod.packageId = packageId;
+                                mod.version = ver;
                                 mod.dir = dir;
                                 mod.defPath = path;
                                 modVersions.Add(mod);
@@ -224,7 +225,7 @@ namespace RimDef
                 lwDetails.Visible = false;
                 cbDisable.Visible = false;
 
-                lblPath.Text = def.file.Substring(def.file.IndexOf("\\1."));
+                lblPath.Text = def.file.Substring(def.file.IndexOf("/1."));
                 xmlView.Text = def.xml;
 
                 if (def.defType.ToLower() == "recipedef")
@@ -341,7 +342,7 @@ namespace RimDef
             foreach (SearchResult result in model.Results)
             {
                 Def def = result.Definition;
-                string[] items = { def.modName, def.defType, def.defName, def.label };
+                string[] items = { def.mod.name, def.defType, def.defName, def.label };
                 var listViewItem = new ListViewItem(items);
                 lwDefs.Items.Add(listViewItem);
                 defsView.Add(def);
