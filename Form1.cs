@@ -224,7 +224,7 @@ namespace RimDef
                 lwDetails.Visible = false;
                 cbDisable.Visible = false;
 
-                lblPath.Text = def.file;
+                lblPath.Text = def.file.Substring(def.file.IndexOf("\\1."));
                 xmlView.Text = def.xml;
 
                 if (def.defType.ToLower() == "recipedef")
