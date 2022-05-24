@@ -236,7 +236,7 @@ namespace RimDef
                             def.label = label;
                             def.description = description;
                             def.texture = texture;
-                            def.file = file; // TODO wrong version dir /1.x/
+                            def.file = file;
                             def.disabled = false;
 
                             // XML view
@@ -292,7 +292,7 @@ namespace RimDef
             {
                 // backup file
                 string backup = def.file + ".ori";
-                if (!File.Exists(def.file))
+                if (!File.Exists(backup))
                     File.Copy(def.file, backup);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
@@ -306,7 +306,6 @@ namespace RimDef
                 if (node != null)
                 {
                     XmlComment comment = doc.CreateComment(node.OuterXml);
-                    //Console.WriteLine(comment.OuterXml);
                     XmlNode parent = node.ParentNode;
                     parent.ReplaceChild(comment, node);
                     doc.Save(def.file);
