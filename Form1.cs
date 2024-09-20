@@ -14,7 +14,14 @@ namespace RimDef
         List<Def> defs = new List<Def>();
         List<Def> defsView = new List<Def>();
 
+        private List<Def> patches = new List<Def>();
+        private List<string> patchesView = new List<string>();
+
         private ListView lwDetails = new ListView();
+
+        List<Mod> modVersions;
+        string[] versions = { "1.0", "1.1", "1.2", "1.3", "1.4", "1.5" };
+        string[] vanilla = { "Core", "Royalty", "Ideology", "Anomaly", "Biotech" };
 
         public Form1()
         {
@@ -32,9 +39,10 @@ namespace RimDef
             this.lwDetails.GridLines = true;
             this.lwDetails.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lwDetails.HideSelection = false;
-            this.lwDetails.Location = new System.Drawing.Point(440, 440);
+            this.lwDetails.Location = new System.Drawing.Point(20, 440);
             this.lwDetails.Name = "lwDetail";
             //this.lwDetails.Size = new System.Drawing.Size(360, 60);
+            this.lwDetails.Scrollable = true;
             this.lwDetails.TabIndex = 4;
             this.lwDetails.UseCompatibleStateImageBehavior = false;
             this.lwDetails.View = System.Windows.Forms.View.Details;
@@ -51,114 +59,80 @@ namespace RimDef
             defs.Clear();
             lbMods.Items.Clear();
             lbDefTypes.DataSource = null;
+            lbPatches.DataSource = null;
             lwDefs.Items.Clear();
             xmlView.Clear();
             gbDesc.Visible = false;
             gbRecipe.Visible = false;
             pictureBox1.Visible = false;
 
-            List<Mod> modVersions;
-            string[] versionNames = { "1.0", "1.1", "1.1-1.2", "1.2", "1.3" };
-
             try
             {
                 List<string> activeMods = xmlReader.readModConfig();
 
-                if (rimDir.Contains("294100")) // steam version
+                //TODO steam mods in different directory?
+                //if (rimDir.Contains("294100")) // steam id
+
+                // vanilla content
+                foreach (string content in vanilla)
                 {
-                    //TODO core defs (since rw 1.1)
-
-                    xmlReader.modDir = rimDir;
-
-                    foreach (string dir in Directory.GetDirectories(rimDir))
-                    {
-                        //Dictionary<string, string> defdirsTmp = new Dictionary<string, string>();
-                        //Tuple<string, string> latest = null;
-
-                        if (cbOnlyActiveMods.Checked)
-                        {
-                            string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
-                            if (!activeMods.Contains(packageId)) continue;
-                        }
-                        string modName = xmlReader.readModName(dir + @"/About/About.xml");
-
-                        Mod mod = new Mod(modName);
-                        mod.defPath = dir + @"/Defs/";
-                        lbMods.Items.Add(mod);
-
-                        /* TODO
-                        foreach (string ver in versionNames)
-                        {
-                            string defPath = dir + "/" + ver + @"/Defs/";
-                            if (Directory.Exists(defPath))
-                            {
-                                latest = new Tuple<string, string>(modName + "*" + ver, defPath);
-                                defdirsTmp.Add(latest.Item1, latest.Item2);
-                            }
-                        }
-                        */
-                    }
+                    Mod dlc = new Mod(content);
+                    dlc.dir = rimDir + @"/Data/" + content + "/";
+                    dlc.defPath = rimDir + @"/Data/" + content + "/Defs/";
+                    lbMods.Items.Add(dlc);
                 }
-                else // non-steam version
+
+                // mod content
+                string modDir = rimDir + @"/Mods/";
+                xmlReader.modDir = modDir;
+                foreach (string dir in Directory.GetDirectories(modDir))
                 {
-                    // Core defs directory (since rw 1.1)
-                    Mod core = new Mod("Core");
-                    core.dir = rimDir + @"/Data/Core/";
-                    core.defPath = rimDir + @"/Data/Core/Defs/";
-                    lbMods.Items.Add(core);
+                    modVersions = new List<Mod>();
+                    Mod latest = null;
 
-                    string modDir = rimDir + @"/Mods/";
-                    xmlReader.modDir = modDir;
-
-                    foreach (string dir in Directory.GetDirectories(modDir))
+                    string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                    if (cbOnlyActiveMods.Checked)
                     {
-                        modVersions = new List<Mod>();
-                        Mod latest = null;
+                        if (!activeMods.Contains(packageId)) continue;
+                    }
 
-                        string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
-                        if (cbOnlyActiveMods.Checked)
-                        {
-                            if (!activeMods.Contains(packageId)) continue;
-                        }
+                    string modName = xmlReader.readModName(dir + @"/About/About.xml");
 
-                        string modName = xmlReader.readModName(dir + @"/About/About.xml");
+                    string path = dir + @"/Defs/";
+                    if (Directory.Exists(path))
+                    {
+                        Mod mod = new Mod(modName);
+                        mod.packageId = packageId;
+                        mod.dir = dir;
+                        mod.defPath = path;
+                        modVersions.Add(mod);
+                        latest = mod;
+                    }
 
-                        string path = dir + @"/Defs/";
+                    foreach (string ver in versions)
+                    {
+                        path = dir + "/" + ver + @"/Defs/";
                         if (Directory.Exists(path))
                         {
-                            Mod mod = new Mod(modName);
+                            Mod mod = new Mod(modName + "*" + ver);
                             mod.packageId = packageId;
+                            mod.version = ver;
                             mod.dir = dir;
                             mod.defPath = path;
                             modVersions.Add(mod);
                             latest = mod;
                         }
+                    }
 
-                        foreach (string ver in versionNames)
+                    if (cbLatestVersion.Checked && latest != null)
+                    {
+                        lbMods.Items.Add(latest);
+                    }
+                    else
+                    {
+                        foreach (Mod m in modVersions)
                         {
-                            path = dir + "/" + ver + @"/Defs/";
-                            if (Directory.Exists(path))
-                            {
-                                Mod mod = new Mod(modName + "*" + ver);
-                                mod.packageId = packageId;
-                                mod.version = ver;
-                                mod.dir = dir;
-                                mod.defPath = path;
-                                modVersions.Add(mod);
-                                latest = mod;
-                            }
-                        }
-
-                        if (cbLatestVersion.Checked && latest != null)
-                        {
-                            lbMods.Items.Add(latest);
-                        }
-                        else
-                        {
-                            foreach (Mod m in modVersions)
-                            {
-                                lbMods.Items.Add(m);
-                            }
+                            lbMods.Items.Add(m);
                         }
                     }
                 }
@@ -168,27 +142,48 @@ namespace RimDef
 
         private void lbMods_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // reading all defs from selected mod
+            // read def types
             Mod mod = (Mod)lbMods.SelectedItem;
-            defs = xmlReader.loadAllDefs(mod);
-            defsView = defs;
+            defs = defsView = xmlReader.loadAllDefs(mod);
+            //xmlReader.defTypes.Sort();
+            lbDefTypes.DataSource = null;
+            lbDefTypes.DataSource = xmlReader.defTypes;
 
+            // read patches
+            patches = xmlReader.loadAllPatches(mod);
+            patchesView = new List<string>();
+            foreach (Def def in patches) {
+                patchesView.Add(def.defName);
+            }
+            lbPatches.DataSource = null;
+            lbPatches.DataSource = patchesView;
+
+            // reset form
             lwDefs.Items.Clear();
             lwDefs.Columns.Clear();
-            lbDefTypes.DataSource = null;
+            lwDefs.Columns.Add("Name", 150);
+            lwDefs.Columns.Add("Label", 300);
+            lwDetails.Items.Clear();
+            lwRecipe.Items.Clear();
             xmlView.Clear();
             gbDesc.Visible = false;
             gbRecipe.Visible = false;
             pictureBox1.Visible = false;
-            lwDetails.Items.Clear();
-            lwRecipe.Items.Clear();
+        }
 
-            lwDefs.Columns.Add("Type", 100);
-            lwDefs.Columns.Add("Name", 120);
-            lwDefs.Columns.Add("Label", 150);
-
-            //xmlReader.defTypes.Sort();
-            lbDefTypes.DataSource = xmlReader.defTypes;
+        private void lbPatches_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lbPatches.SelectedIndices.Count > 0)
+            {
+                string selectedName = patchesView[lbPatches.SelectedIndices[0]];
+                foreach (Def patch in patches)
+                {
+                    if (patch.defName == selectedName)
+                    {
+                        xmlView.Text = patch.xml;
+                    }
+                }
+            }
         }
 
         // Filter defs from loaded mod ListBox
@@ -205,11 +200,12 @@ namespace RimDef
                     if (def.defType == selectedType)
                     {
                         defsView.Add(def);
-                        string[] items = { def.defType, def.defName, def.label };
+                        string[] items = { def.defName, def.label };
                         var listViewItem = new ListViewItem(items);
                         lwDefs.Items.Add(listViewItem);
                     }
                 }
+                xmlView.Text = "";
             }
         }
 
@@ -225,7 +221,11 @@ namespace RimDef
                 lwDetails.Visible = false;
                 cbDisable.Visible = false;
 
-                lblPath.Text = def.file.Substring(def.file.IndexOf("/1."));
+                //
+                int i = def.file.IndexOf("/1.");
+                if (i > -1) lblPath.Text = def.file.Substring(i);
+                //
+
                 xmlView.Text = def.xml;
 
                 if (def.defType.ToLower() == "recipedef")

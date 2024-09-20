@@ -11,6 +11,64 @@ namespace RimDef
 
         public List<string> defTypes;
 
+        public List<Def> loadAllPatches(Mod mod)
+        {
+            List<Def> defs = new List<Def>();
+            try
+            {
+                string path = mod.dir + "/" + mod.version + "/Patches";
+                string[] files = Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories);
+                foreach (string file in files)
+                {
+                    Console.WriteLine("reading " + file);
+                    var doc = new XmlDocument();
+                    doc.Load(file);
+                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Patch/Operation"))
+                    {
+                        foreach (XmlNode child in node.ChildNodes)
+                        {
+                            //TODO new subclass Patch
+                            Def def = new Def();
+                            def.defType = "patch";
+                            def.defName = "unset";
+                            if (child.Attributes["Class"] != null)
+                            {
+                                def.defName = child.Attributes["Class"].Value;
+                            }
+
+                            string xpath = "unset";
+                            string value = "unset";
+
+                            string key = child.Name;
+
+                            if (key == "xpath") xpath = child.InnerText;
+
+                            if (key == "value")
+                            {
+                                value = child.InnerText;
+                                foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                {
+                                    //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                }
+                            }
+
+                            def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString(); ;
+                            def.mod = mod;
+                            def.file = file;
+                            def.label = xpath;
+                            def.description = value;
+                            def.disabled = false;                            
+                            defs.Add(def);
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+            return defs;
+        }
+
         public List<Def> loadAllDefs(Mod mod)
         {
             Console.WriteLine("loading mod: " + mod.name);
@@ -114,7 +172,34 @@ namespace RimDef
                                 {
                                     description = child.ChildNodes[i].InnerText;
                                 }
+
+                                if (name == "reportString") // Jobs
+                                {
+                                    description = child.ChildNodes[i].InnerText;
+                                }
+                                if (name == "baseDesc") // Backstories
+                                {
+                                    description = child.ChildNodes[i].InnerText;
+                                }
+                                if (name == "degreeDatas")  // Traits
+                                {
+                                    XmlNode traitNode = child.SelectSingleNode("degreeDatas/li/description");
+                                    if (traitNode != null)
+                                    {
+                                        description = traitNode.InnerText;
+                                    }
+                                }
+                                if (name == "stages")  // Thoughts
+                                {
+                                    XmlNodeList thoughtDefs = child.SelectNodes("stages/li/description");
+                                    foreach (XmlNode thoughtNode in thoughtDefs)
+                                    {
+                                        description += thoughtNode.InnerText + "\n\n";
+                                    }
+                                }
                             }
+                            if (description == "") description = "No additional information available";
+
 
                             // Texture
                             XmlNode texNode = child.SelectSingleNode("graphicData/texPath");
@@ -258,7 +343,7 @@ namespace RimDef
                 // read defs disabled by comment <!-- -->
                 foreach (XmlNode comment in doc.SelectNodes("//comment()"))
                 {
-                    //Console.WriteLine("\ncomment: " + comment.InnerText + "\n");
+                    Console.WriteLine("\ncomment: " + comment.InnerText + "\n");
                     string xml = comment.InnerText;
                     if (!xml.StartsWith("<")) xml = "<" + xml + ">";
                     XmlReader nodeReader = XmlReader.Create(new StringReader(xml));
@@ -281,7 +366,7 @@ namespace RimDef
                     }
                 }
             }
-            catch (Exception) { Console.WriteLine("XMLReader: invalid comment."); }
+            catch (Exception e) { Console.WriteLine("XMLReader: " + e.StackTrace); }
 
             return xmlDefs;
         }
