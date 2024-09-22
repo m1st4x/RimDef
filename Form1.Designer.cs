@@ -49,11 +49,12 @@
             this.gbDesc = new System.Windows.Forms.GroupBox();
             this.gbRecipe = new System.Windows.Forms.GroupBox();
             this.cbOnlyActiveMods = new System.Windows.Forms.CheckBox();
-            this.cbLatestVersion = new System.Windows.Forms.CheckBox();
-            this.cbDisable = new System.Windows.Forms.CheckBox();
             this.lblPath = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lbPatches = new System.Windows.Forms.ListBox();
+            this.cbVersion = new System.Windows.Forms.ComboBox();
+            this.btnDisable = new System.Windows.Forms.Button();
+            this.btnEnable = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -206,9 +207,9 @@
             this.label2.Location = new System.Drawing.Point(232, 103);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 16);
+            this.label2.Size = new System.Drawing.Size(35, 16);
             this.label2.TabIndex = 13;
-            this.label2.Text = "Types";
+            this.label2.Text = "Defs";
             // 
             // label3
             // 
@@ -216,9 +217,9 @@
             this.label3.Location = new System.Drawing.Point(20, 20);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(234, 16);
+            this.label3.Size = new System.Drawing.Size(118, 16);
             this.label3.TabIndex = 14;
-            this.label3.Text = "Rimworld directory ( steam id: 294100 )";
+            this.label3.Text = "Rimworld directory";
             // 
             // label4
             // 
@@ -236,9 +237,9 @@
             this.label5.Location = new System.Drawing.Point(642, 103);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 16);
+            this.label5.Size = new System.Drawing.Size(52, 16);
             this.label5.TabIndex = 16;
-            this.label5.Text = "Definitions";
+            this.label5.Text = "Content";
             // 
             // gbDesc
             // 
@@ -269,41 +270,13 @@
             // cbOnlyActiveMods
             // 
             this.cbOnlyActiveMods.AutoSize = true;
-            this.cbOnlyActiveMods.Checked = true;
-            this.cbOnlyActiveMods.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbOnlyActiveMods.Location = new System.Drawing.Point(24, 68);
+            this.cbOnlyActiveMods.Location = new System.Drawing.Point(88, 70);
             this.cbOnlyActiveMods.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbOnlyActiveMods.Name = "cbOnlyActiveMods";
-            this.cbOnlyActiveMods.Size = new System.Drawing.Size(102, 20);
+            this.cbOnlyActiveMods.Size = new System.Drawing.Size(93, 20);
             this.cbOnlyActiveMods.TabIndex = 21;
-            this.cbOnlyActiveMods.Text = "active mods";
+            this.cbOnlyActiveMods.Text = "only active";
             this.cbOnlyActiveMods.UseVisualStyleBackColor = true;
-            // 
-            // cbLatestVersion
-            // 
-            this.cbLatestVersion.AutoSize = true;
-            this.cbLatestVersion.Checked = true;
-            this.cbLatestVersion.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbLatestVersion.Location = new System.Drawing.Point(135, 68);
-            this.cbLatestVersion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cbLatestVersion.Name = "cbLatestVersion";
-            this.cbLatestVersion.Size = new System.Drawing.Size(108, 20);
-            this.cbLatestVersion.TabIndex = 22;
-            this.cbLatestVersion.Text = "latest version";
-            this.cbLatestVersion.UseVisualStyleBackColor = true;
-            // 
-            // cbDisable
-            // 
-            this.cbDisable.AutoCheck = false;
-            this.cbDisable.AutoSize = true;
-            this.cbDisable.Location = new System.Drawing.Point(1093, 359);
-            this.cbDisable.Margin = new System.Windows.Forms.Padding(4);
-            this.cbDisable.Name = "cbDisable";
-            this.cbDisable.Size = new System.Drawing.Size(84, 20);
-            this.cbDisable.TabIndex = 23;
-            this.cbDisable.Text = "Disabled";
-            this.cbDisable.UseVisualStyleBackColor = true;
-            this.cbDisable.CheckedChanged += new System.EventHandler(this.cbDisable_CheckedChanged);
             // 
             // lblPath
             // 
@@ -335,16 +308,47 @@
             this.lbPatches.TabIndex = 25;
             this.lbPatches.SelectedIndexChanged += new System.EventHandler(this.lbPatches_SelectedIndexChanged);
             // 
+            // cbVersion
+            // 
+            this.cbVersion.FormattingEnabled = true;
+            this.cbVersion.Location = new System.Drawing.Point(23, 68);
+            this.cbVersion.Name = "cbVersion";
+            this.cbVersion.Size = new System.Drawing.Size(59, 24);
+            this.cbVersion.TabIndex = 27;
+            // 
+            // btnDisable
+            // 
+            this.btnDisable.Enabled = false;
+            this.btnDisable.Location = new System.Drawing.Point(1100, 358);
+            this.btnDisable.Name = "btnDisable";
+            this.btnDisable.Size = new System.Drawing.Size(75, 23);
+            this.btnDisable.TabIndex = 28;
+            this.btnDisable.Text = "Disable";
+            this.btnDisable.UseVisualStyleBackColor = true;
+            this.btnDisable.Click += new System.EventHandler(this.btnDisable_Click);
+            // 
+            // btnEnable
+            // 
+            this.btnEnable.Enabled = false;
+            this.btnEnable.Location = new System.Drawing.Point(1026, 358);
+            this.btnEnable.Name = "btnEnable";
+            this.btnEnable.Size = new System.Drawing.Size(75, 23);
+            this.btnEnable.TabIndex = 29;
+            this.btnEnable.Text = "Enable";
+            this.btnEnable.UseVisualStyleBackColor = true;
+            this.btnEnable.Click += new System.EventHandler(this.btnEnable_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 897);
+            this.Controls.Add(this.btnEnable);
+            this.Controls.Add(this.btnDisable);
+            this.Controls.Add(this.cbVersion);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.lbPatches);
             this.Controls.Add(this.lblPath);
-            this.Controls.Add(this.cbDisable);
-            this.Controls.Add(this.cbLatestVersion);
             this.Controls.Add(this.cbOnlyActiveMods);
             this.Controls.Add(this.gbRecipe);
             this.Controls.Add(this.gbDesc);
@@ -399,11 +403,12 @@
         private System.Windows.Forms.GroupBox gbDesc;
         private System.Windows.Forms.GroupBox gbRecipe;
         private System.Windows.Forms.CheckBox cbOnlyActiveMods;
-        private System.Windows.Forms.CheckBox cbLatestVersion;
-        private System.Windows.Forms.CheckBox cbDisable;
         private System.Windows.Forms.Label lblPath;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox lbPatches;
+        private System.Windows.Forms.ComboBox cbVersion;
+        private System.Windows.Forms.Button btnDisable;
+        private System.Windows.Forms.Button btnEnable;
     }
 }
 

@@ -7,7 +7,7 @@ namespace RimDef
 {
     class XMLReader
     {
-        public string modDir;
+        string appdataPath = "%USERPROFILE%\\Appdata\\LocalLow\\Ludeon Studios\\RimWorld by Ludeon Studios\\Config\\ModsConfig.xml";
 
         public List<string> defTypes;
 
@@ -16,55 +16,53 @@ namespace RimDef
             List<Def> defs = new List<Def>();
             try
             {
-                string path = mod.dir + "/" + mod.version + "/Patches";
+                string path = mod.dir + "\\" + mod.version + "\\Patches";
                 string[] files = Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
-                    Console.WriteLine("reading " + file);
-                    var doc = new XmlDocument();
-                    doc.Load(file);
-                    foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Patch/Operation"))
+                    try
                     {
-                        foreach (XmlNode child in node.ChildNodes)
+                        Console.WriteLine("reading " + file);
+                        var doc = new XmlDocument();
+                        doc.Load(file);
+                        foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Patch/Operation"))
                         {
-                            //TODO new subclass Patch
-                            Def def = new Def();
-                            def.defType = "patch";
-                            def.defName = "unset";
-                            if (child.Attributes["Class"] != null)
+                            foreach (XmlNode child in node.ChildNodes)
                             {
-                                def.defName = child.Attributes["Class"].Value;
-                            }
-
-                            string xpath = "unset";
-                            string value = "unset";
-
-                            string key = child.Name;
-
-                            if (key == "xpath") xpath = child.InnerText;
-
-                            if (key == "value")
-                            {
-                                value = child.InnerText;
-                                foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                Patch def = new Patch();
+                                def.defType = "patch";
+                                def.defName = "-undefined-";
+                                if (child.Attributes != null && child.Attributes.Count > 0)
                                 {
-                                    //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                    def.defName = child.Attributes[0].Value;
                                 }
+
+                                string key = child.Name;
+
+                                if (key == "xpath") def.xpath = child.InnerText;
+
+                                if (key == "value")
+                                {
+                                    def.value = child.InnerText;
+                                    foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                    {
+                                        //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                    }
+                                }
+
+                                def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString(); ;
+                                def.mod = mod;
+                                def.file = file;
+                                def.enabled = true;
+                                defs.Add(def);
+
                             }
-
-                            def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString(); ;
-                            def.mod = mod;
-                            def.file = file;
-                            def.label = xpath;
-                            def.description = value;
-                            def.disabled = false;                            
-                            defs.Add(def);
-
                         }
                     }
+                    catch (Exception e) { Console.WriteLine(e); }
                 }
             }
-            catch (Exception ex) { Console.WriteLine(ex); }
+            catch (Exception e) { Console.WriteLine(e); }
 
             return defs;
         }
@@ -82,7 +80,7 @@ namespace RimDef
             // see https://rimworldwiki.com/wiki/Modding_Tutorials/Mod_folder_structure
             try
             {
-                string path = mod.dir + "/" + mod.version;
+                string path = mod.dir + "\\" + mod.version;
                 string[] files = Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
@@ -98,7 +96,7 @@ namespace RimDef
         public List<string> readModConfig()
         {
             List<string> activeMods = new List<string>();
-            string path = Environment.ExpandEnvironmentVariables("%USERPROFILE%/Appdata/LocalLow/Ludeon Studios/RimWorld by Ludeon Studios/Config/ModsConfig.xml");
+            string path = Environment.ExpandEnvironmentVariables(appdataPath);
             var doc = new XmlDocument();
             doc.Load(path);
             foreach (XmlNode node in doc.DocumentElement.SelectNodes("/ModsConfigData/activeMods/li"))
@@ -201,14 +199,14 @@ namespace RimDef
                             if (description == "") description = "No additional information available";
 
 
-                            // Texture
+                            // Textures
                             XmlNode texNode = child.SelectSingleNode("graphicData/texPath");
                             if (texNode != null)
                             {
                                 // core textures
                                 // https://ludeon.com/forums/index.php?topic=2325
 
-                                string texPath = mod.dir + @"/Textures/" + texNode.InnerText;
+                                string texPath = mod.dir + @"\\Textures\\" + texNode.InnerText;
                                 if (Directory.Exists(texPath))
                                 {
                                     string[] files = Directory.GetFiles(texPath, "*.*", SearchOption.AllDirectories);
@@ -216,13 +214,13 @@ namespace RimDef
                                 }
                                 else
                                 {
-                                    texture = mod.dir + @"/Textures/" + texNode.InnerText + ".png";
+                                    texture = mod.dir + @"\\Textures\\" + texNode.InnerText + ".png";
                                     if (!File.Exists(texture))
                                     {
                                         //Console.WriteLine(texture + " does not exist");
                                         foreach (string ori in orientations)
                                         {
-                                            string textureOri = mod.dir + @"/Textures/" + texNode.InnerText + ori + ".png";
+                                            string textureOri = mod.dir + @"\\Textures\\" + texNode.InnerText + ori + ".png";
                                             if (File.Exists(textureOri))
                                             {
                                                 texture = textureOri;
@@ -322,7 +320,7 @@ namespace RimDef
                             def.description = description;
                             def.texture = texture;
                             def.file = file;
-                            def.disabled = false;
+                            def.enabled = true;
 
                             // XML view
                             string xmlOut = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString();
@@ -360,7 +358,7 @@ namespace RimDef
                         XmlNode labelNode = newNode.SelectSingleNode("label");
                         if (labelNode != null) disabledDef.label += labelNode.InnerText;
                         disabledDef.file = file;
-                        disabledDef.disabled = true;
+                        disabledDef.enabled = false;
                         xmlDefs.Add(disabledDef);
                         Console.WriteLine("Disabled definition added.");
                     }
@@ -394,7 +392,7 @@ namespace RimDef
                     XmlNode parent = node.ParentNode;
                     parent.ReplaceChild(comment, node);
                     doc.Save(def.file);
-                    def.disabled = true;
+                    def.enabled = false;
                     Console.WriteLine("'" + def.defName + "' disabled.");
                 }
                 else
@@ -423,7 +421,7 @@ namespace RimDef
                     XmlNode parent = comment.ParentNode;
                     parent.ReplaceChild(newNode, comment);
                     doc.Save(def.file);
-                    def.disabled = false;
+                    def.enabled = true;
                     Console.WriteLine("'" + def.defName + "' enabled.");
                     break;
                 }

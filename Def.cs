@@ -13,7 +13,7 @@ namespace RimDef
         public string texture;
         public string xml;
         public string file;
-        public bool disabled;
+        public bool enabled;
 
         public List<string[]> details = new List<string[]>();
     }

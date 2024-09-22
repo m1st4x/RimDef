@@ -20,7 +20,6 @@ namespace RimDef
 
         private ListView lwDetails = new ListView();
 
-        List<Mod> modVersions;
         string[] versions = { "1.0", "1.1", "1.2", "1.3", "1.4", "1.5" };
         string[] vanilla = { "Core", "Royalty", "Ideology", "Anomaly", "Biotech" };
 
@@ -28,32 +27,36 @@ namespace RimDef
         {
             InitializeComponent();
 
-            txtModDir.Text = @"C:\Games\RimWorld";
+            txtModDir.Text = @"C:\Users\Ralf\Desktop\Rimworld";
+            txtModDir.Text = @"C:\Games\Rimworld";
+
+            cbVersion.DataSource = versions;
+            cbVersion.SelectedIndex = versions.Length - 1;
 
             lwRecipe.Columns.Add("amount", 50);
             lwRecipe.Columns.Add("ingredient", 200);
             lwRecipe.Columns.Add("products", 100);
 
-            // 
-            // lwDetail
-            // 
-            this.lwDetails.GridLines = true;
-            this.lwDetails.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lwDetails.HideSelection = false;
-            this.lwDetails.Location = new System.Drawing.Point(20, 440);
-            this.lwDetails.Name = "lwDetail";
+            lwDetails.GridLines = true;
+            lwDetails.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            lwDetails.HideSelection = false;
+            lwDetails.Location = new System.Drawing.Point(20, 440);
+            lwDetails.Name = "lwDetail";
             //this.lwDetails.Size = new System.Drawing.Size(360, 60);
-            this.lwDetails.Scrollable = true;
-            this.lwDetails.TabIndex = 4;
-            this.lwDetails.UseCompatibleStateImageBehavior = false;
-            this.lwDetails.View = System.Windows.Forms.View.Details;
-            this.lwDetails.Visible = false;
+            lwDetails.Scrollable = true;
+            lwDetails.TabIndex = 4;
+            lwDetails.UseCompatibleStateImageBehavior = false;
+            lwDetails.View = System.Windows.Forms.View.Details;
+            lwDetails.Visible = false;
 
-            this.lwDetails.Columns.Add("key", 150);
-            this.lwDetails.Columns.Add("value", 150);
+            lwDetails.Columns.Add("key", 150);
+            lwDetails.Columns.Add("value", 150);
 
-            this.Controls.Add(this.lwDetails);
+            Controls.Add(this.lwDetails);
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        { }
 
         private void loadModList(string rimDir)
         {
@@ -67,78 +70,57 @@ namespace RimDef
             gbRecipe.Visible = false;
             pictureBox1.Visible = false;
 
-            try
+            List<string> activeMods = xmlReader.readModConfig();
+
+            //TODO steam mods in different directory?
+            //if (rimDir.Contains("294100")) // steam id
+
+            // vanilla content
+            foreach (string content in vanilla)
             {
-                List<string> activeMods = xmlReader.readModConfig();
+                Mod dlc = new Mod(content);
+                dlc.dir = rimDir + "\\Data\\" + content + "\\";
+                dlc.defPath = rimDir + "\\Data\\" + content + "\\Defs\\";
+                lbMods.Items.Add(dlc);
+            }
 
-                //TODO steam mods in different directory?
-                //if (rimDir.Contains("294100")) // steam id
-
-                // vanilla content
-                foreach (string content in vanilla)
+            // mod content
+            string modDir = rimDir + "\\Mods\\";
+            foreach (string dir in Directory.GetDirectories(modDir))
+            {
+                try
                 {
-                    Mod dlc = new Mod(content);
-                    dlc.dir = rimDir + @"/Data/" + content + "/";
-                    dlc.defPath = rimDir + @"/Data/" + content + "/Defs/";
-                    lbMods.Items.Add(dlc);
-                }
-
-                // mod content
-                string modDir = rimDir + @"/Mods/";
-                xmlReader.modDir = modDir;
-                foreach (string dir in Directory.GetDirectories(modDir))
-                {
-                    modVersions = new List<Mod>();
-                    Mod latest = null;
-
-                    string packageId = xmlReader.readPackageId(dir + @"/About/About.xml");
+                    string packageId = xmlReader.readPackageId(dir + "\\About\\About.xml");
                     if (cbOnlyActiveMods.Checked)
                     {
                         if (!activeMods.Contains(packageId)) continue;
                     }
 
-                    string modName = xmlReader.readModName(dir + @"/About/About.xml");
+                    string modName = xmlReader.readModName(dir + "\\About\\About.xml");
 
-                    string path = dir + @"/Defs/";
+                    string path = dir + "\\Defs\\";
                     if (Directory.Exists(path))
                     {
                         Mod mod = new Mod(modName);
                         mod.packageId = packageId;
                         mod.dir = dir;
                         mod.defPath = path;
-                        modVersions.Add(mod);
-                        latest = mod;
                     }
 
-                    foreach (string ver in versions)
+                    string ver = versions[cbVersion.SelectedIndex];
+                    path = dir + "\\" + ver + "\\Defs\\";
+                    if (Directory.Exists(path))
                     {
-                        path = dir + "/" + ver + @"/Defs/";
-                        if (Directory.Exists(path))
-                        {
-                            Mod mod = new Mod(modName + "*" + ver);
-                            mod.packageId = packageId;
-                            mod.version = ver;
-                            mod.dir = dir;
-                            mod.defPath = path;
-                            modVersions.Add(mod);
-                            latest = mod;
-                        }
-                    }
-
-                    if (cbLatestVersion.Checked && latest != null)
-                    {
-                        lbMods.Items.Add(latest);
-                    }
-                    else
-                    {
-                        foreach (Mod m in modVersions)
-                        {
-                            lbMods.Items.Add(m);
-                        }
+                        Mod mod = new Mod(ver + " " + modName);
+                        mod.packageId = packageId;
+                        mod.version = ver;
+                        mod.dir = dir;
+                        mod.defPath = path;
+                        lbMods.Items.Add(mod);
                     }
                 }
+                catch (Exception e) { Console.WriteLine(e); }
             }
-            catch (Exception ex) { Console.WriteLine("Error loading modlist: " + ex); }
         }
 
         private void lbMods_SelectedIndexChanged(object sender, EventArgs e)
@@ -182,6 +164,7 @@ namespace RimDef
                     if (patch.defName == selectedName)
                     {
                         xmlView.Text = patch.xml;
+                        lblPath.Text = patch.file;
                     }
                 }
             }
@@ -220,10 +203,14 @@ namespace RimDef
                 gbDesc.Visible = false;
                 pictureBox1.Visible = false;
                 lwDetails.Visible = false;
-                cbDisable.Visible = false;
 
                 //
-                int i = def.file.IndexOf("/1.");
+                btnDisable.Enabled = def.enabled;
+                btnEnable.Enabled = !btnDisable.Enabled;
+                //
+
+                //
+                int i = def.file.IndexOf("\\1.");
                 if (i > -1) lblPath.Text = def.file.Substring(i);
                 //
 
@@ -264,7 +251,7 @@ namespace RimDef
                         lwDetails.Visible = true;
                     }
 
-                    // Texture
+                    // Textures
                     Console.WriteLine("texture path = " + def.texture);
                     Bitmap image = new Bitmap(RimDef.Properties.Resources.nopic);
                     if (File.Exists(def.texture))
@@ -278,9 +265,6 @@ namespace RimDef
                     pictureBox1.Image = (Image)image;
                     pictureBox1.Visible = true;
                     pictureBox1.Refresh();
-
-                    cbDisable.Visible = true;
-                    cbDisable.Checked = def.disabled;
                 }
 
                 // Description
@@ -331,16 +315,16 @@ namespace RimDef
             string searchText = txtSearch.Text;
             Console.WriteLine(searchText);
 
-            var model = new SearchResponse();
-            var s = new System.Diagnostics.Stopwatch();
-            s.Start();
-            model.Results = SearchCore.Search(searchText);
-            s.Stop();
-            model.TimeTaken = s.Elapsed;
+            var search = new SearchResponse();
+            var time = new System.Diagnostics.Stopwatch();
+            time.Start();
+            search.Results = SearchCore.Search(searchText);
+            time.Stop();
+            search.TimeTaken = time.Elapsed;
 
             defsView.Clear();
 
-            foreach (SearchResult result in model.Results)
+            foreach (SearchResult result in search.Results)
             {
                 Def def = result.Definition;
                 string[] items = { def.mod.name, def.defType, def.defName, def.label };
@@ -350,20 +334,43 @@ namespace RimDef
             }
         }
 
-        private void cbDisable_CheckedChanged(object sender, EventArgs e)
+        private void btnDisable_Click(object sender, EventArgs e)
         {
-            Def def = defsView[lwDefs.SelectedIndices[0]];
-            if (cbDisable.Checked)
+            if (lwDefs.SelectedIndices.Count > 0)
             {
-                Console.WriteLine(def.file);
-                xmlReader.disableNode(def);
+                Def def = defsView[lwDefs.SelectedIndices[0]];
+                if (!def.enabled)
+                {
+                    var confirm = MessageBox.Show("Are you sure to disable this item ??", "Confirm!", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        xmlReader.disableNode(def);
+                        def.enabled = false;
+                        btnDisable.Enabled = false;
+                        btnEnable.Enabled = !btnDisable.Enabled;
+                    }
+                }
             }
-            else
-                xmlReader.enableNode(def);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        { }
+        private void btnEnable_Click(object sender, EventArgs e)
+        {
+            if (lwDefs.SelectedIndices.Count > 0)
+            {
+                Def def = defsView[lwDefs.SelectedIndices[0]];
+                if (def.enabled)
+                {
+                    var confirm = MessageBox.Show("Are you sure to enable this item ??", "Confirm!", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        xmlReader.enableNode(def);
+                        def.enabled = true;
+                        btnDisable.Enabled = true;
+                        btnEnable.Enabled = !btnDisable.Enabled;
+                    }
+                }
+            }
+        }
 
     }
 }
