@@ -67,7 +67,7 @@
             this.lbMods.Location = new System.Drawing.Point(25, 123);
             this.lbMods.Margin = new System.Windows.Forms.Padding(4);
             this.lbMods.Name = "lbMods";
-            this.lbMods.Size = new System.Drawing.Size(187, 228);
+            this.lbMods.Size = new System.Drawing.Size(241, 228);
             this.lbMods.TabIndex = 0;
             this.lbMods.SelectedIndexChanged += new System.EventHandler(this.lbMods_SelectedIndexChanged);
             // 
@@ -75,7 +75,7 @@
             // 
             this.lbDefTypes.FormattingEnabled = true;
             this.lbDefTypes.ItemHeight = 16;
-            this.lbDefTypes.Location = new System.Drawing.Point(236, 123);
+            this.lbDefTypes.Location = new System.Drawing.Point(295, 123);
             this.lbDefTypes.Margin = new System.Windows.Forms.Padding(4);
             this.lbDefTypes.Name = "lbDefTypes";
             this.lbDefTypes.Size = new System.Drawing.Size(161, 228);
@@ -87,7 +87,7 @@
             this.lwDefs.FullRowSelect = true;
             this.lwDefs.GridLines = true;
             this.lwDefs.HideSelection = false;
-            this.lwDefs.Location = new System.Drawing.Point(645, 123);
+            this.lwDefs.Location = new System.Drawing.Point(755, 123);
             this.lwDefs.Margin = new System.Windows.Forms.Padding(4);
             this.lwDefs.Name = "lwDefs";
             this.lwDefs.Size = new System.Drawing.Size(530, 228);
@@ -152,7 +152,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(942, 89);
+            this.txtSearch.Location = new System.Drawing.Point(1052, 89);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(4);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(159, 22);
@@ -161,7 +161,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(1110, 87);
+            this.btnSearch.Location = new System.Drawing.Point(1220, 87);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 28);
@@ -182,7 +182,7 @@
             // 
             // xmlView
             // 
-            this.xmlView.Location = new System.Drawing.Point(645, 399);
+            this.xmlView.Location = new System.Drawing.Point(755, 399);
             this.xmlView.Margin = new System.Windows.Forms.Padding(4);
             this.xmlView.Multiline = true;
             this.xmlView.Name = "xmlView";
@@ -204,7 +204,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(232, 103);
+            this.label2.Location = new System.Drawing.Point(291, 103);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 16);
@@ -224,7 +224,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(642, 379);
+            this.label4.Location = new System.Drawing.Point(752, 379);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 16);
@@ -234,7 +234,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(642, 103);
+            this.label5.Location = new System.Drawing.Point(752, 103);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 16);
@@ -290,7 +290,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(420, 103);
+            this.label6.Location = new System.Drawing.Point(479, 103);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(56, 16);
@@ -301,10 +301,10 @@
             // 
             this.lbPatches.FormattingEnabled = true;
             this.lbPatches.ItemHeight = 16;
-            this.lbPatches.Location = new System.Drawing.Point(424, 123);
+            this.lbPatches.Location = new System.Drawing.Point(483, 123);
             this.lbPatches.Margin = new System.Windows.Forms.Padding(4);
             this.lbPatches.Name = "lbPatches";
-            this.lbPatches.Size = new System.Drawing.Size(161, 228);
+            this.lbPatches.Size = new System.Drawing.Size(215, 228);
             this.lbPatches.TabIndex = 25;
             this.lbPatches.SelectedIndexChanged += new System.EventHandler(this.lbPatches_SelectedIndexChanged);
             // 
@@ -319,7 +319,7 @@
             // btnDisable
             // 
             this.btnDisable.Enabled = false;
-            this.btnDisable.Location = new System.Drawing.Point(1100, 358);
+            this.btnDisable.Location = new System.Drawing.Point(1210, 358);
             this.btnDisable.Name = "btnDisable";
             this.btnDisable.Size = new System.Drawing.Size(75, 23);
             this.btnDisable.TabIndex = 28;
@@ -330,7 +330,7 @@
             // btnEnable
             // 
             this.btnEnable.Enabled = false;
-            this.btnEnable.Location = new System.Drawing.Point(1026, 358);
+            this.btnEnable.Location = new System.Drawing.Point(1136, 358);
             this.btnEnable.Name = "btnEnable";
             this.btnEnable.Size = new System.Drawing.Size(75, 23);
             this.btnEnable.TabIndex = 29;

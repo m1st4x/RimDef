@@ -7,24 +7,23 @@ namespace RimDef
 {
     class XMLReader
     {
-        string appdataPath = "%USERPROFILE%\\Appdata\\LocalLow\\Ludeon Studios\\RimWorld by Ludeon Studios\\Config\\ModsConfig.xml";
+        public string appdataPath = "%USERPROFILE%\\Appdata\\LocalLow\\Ludeon Studios\\RimWorld by Ludeon Studios\\Config\\ModsConfig.xml";
 
         public List<string> defTypes;
 
         public List<Def> loadAllPatches(Mod mod)
         {
             List<Def> defs = new List<Def>();
-            try
-            {
-                string path = mod.dir + "\\" + mod.version + "\\Patches";
-                string[] files = Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories);
-                foreach (string file in files)
+            string path = mod.dir + "\\" + mod.version + "\\Patches";
+            if (Directory.Exists(path))
+            {                
+                foreach (string file in Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories))
                 {
                     try
                     {
                         Console.WriteLine("reading " + file);
                         var doc = new XmlDocument();
-                        doc.Load(file);
+                        doc.Load(file);                        
                         foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Patch/Operation"))
                         {
                             foreach (XmlNode child in node.ChildNodes)
@@ -35,34 +34,55 @@ namespace RimDef
                                 if (child.Attributes != null && child.Attributes.Count > 0)
                                 {
                                     def.defName = child.Attributes[0].Value;
-                                }
 
-                                string key = child.Name;
+                                    string key = child.Name;
 
-                                if (key == "xpath") def.xpath = child.InnerText;
+                                    if (key == "xpath") def.xpath = child.InnerText;
 
-                                if (key == "value")
-                                {
-                                    def.value = child.InnerText;
-                                    foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                    if (key == "value")
                                     {
-                                        //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                        def.value = child.InnerText;
+                                        foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                        {
+                                            //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                        }
                                     }
+
+                                    def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString();
+                                    def.mod = mod;
+                                    def.file = file;
+                                    def.enabled = true;
+                                    defs.Add(def);
+
                                 }
-
-                                def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString(); ;
-                                def.mod = mod;
-                                def.file = file;
-                                def.enabled = true;
-                                defs.Add(def);
-
                             }
                         }
+
+                        foreach (XmlNode li in doc.DocumentElement.SelectNodes("/Patch/Operation/match/operations/li"))
+                        {
+                            Patch op = new Patch();
+                            op.defType = "patch";
+                            op.defName = "-undef-";
+                            if (li.Attributes != null && li.Attributes.Count > 0)
+                            {
+                                op.defName = li.Attributes[0].Value;
+                                foreach (XmlNode child in li.ChildNodes)
+                                {
+                                    if (child.Name == "xpath") op.xpath = child.InnerText;
+                                    if (child.Name == "value") op.value = child.InnerText;
+                                }
+                                op.xml = System.Xml.Linq.XDocument.Parse(li.OuterXml).ToString();
+                                op.mod = mod;
+                                op.file = file;
+                                op.enabled = true;
+                                defs.Add(op);
+                            }
+                        }
+
                     }
                     catch (Exception e) { Console.WriteLine(e); }
                 }
             }
-            catch (Exception e) { Console.WriteLine(e); }
 
             return defs;
         }
