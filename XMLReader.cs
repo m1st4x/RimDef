@@ -27,7 +27,7 @@ namespace RimDef
                         var doc = new XmlDocument();
                         doc.Load(file);
 
-                        // <Operation>
+                        // <Operation Class="...
                         string opClass = "unset";
                         XmlNodeList opNodes = doc.DocumentElement.SelectNodes("/Patch/Operation");
                         foreach (XmlNode opNode in opNodes)
@@ -37,10 +37,34 @@ namespace RimDef
                                 opClass = opNode.Attributes[0].Value;
                                 Console.WriteLine("opClass=" + opClass);
 
-                                ////////////////////////////////////////////////////////////////////
-                                // <Operation Class="PatchOperationFindMod">
-                                //
-                                if (opClass == "PatchOperationFindMod")
+                                if (opClass == "PatchOperationAdd" || 
+                                    opClass == "PatchOperationInsert" || 
+                                    opClass == "PatchOperationRemove" || 
+                                    opClass == "PatchOperationReplace" || 
+                                    opClass == "PatchOperationAttributeAdd")
+                                {
+                                    Patch patch = new Patch();
+                                    patch.defType = "Patch";
+
+                                    patch.defName = opClass;
+                                    patch.patchType = opClass;                                    
+                                    
+                                    patch.mod = mod;
+                                    patch.file = file;
+                                    patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
+                                    patch.enabled = true;
+
+                                    foreach (XmlNode child in opNode.ChildNodes)
+                                    {
+                                        if (child.Name == "xpath") patch.xpath = child.InnerText;
+                                        if (child.Name == "value") patch.value = child.InnerText;
+                                        if (child.Name == "success") patch.success = child.InnerText;
+                                    }
+                                    patches.Add(patch);
+                                    Console.WriteLine("-----------------------");
+                                }
+
+                                else if (opClass == "PatchOperationFindMod")
                                 {
                                     // mods
                                     List<string> patchMods = new List<string>();
@@ -66,9 +90,13 @@ namespace RimDef
                                             Console.WriteLine("Class=" + matchClass);
                                         }
 
-                                        if (matchClass == "PatchOperationAdd")
+                                        if (matchClass == "PatchOperationAdd" ||
+                                            matchClass == "PatchOperationInsert" ||
+                                            matchClass == "PatchOperationRemove" ||
+                                            matchClass == "PatchOperationReplace")
+                                            //...
                                         {
-                                            //TODO
+                                            //TODO?
                                         }
 
                                         if (matchClass == "PatchOperationSequence")
@@ -104,7 +132,9 @@ namespace RimDef
                                                     Console.WriteLine("target=" + name);
                                                 }
                                                 catch (Exception ex) { Console.WriteLine(ex.Message); }
-
+                                                //
+                                                name = opClass + " (sequence)";
+                                                //
                                                 Patch patch = new Patch();
                                                 patch.defType = matchClass;
                                                 patch.defName = name;
@@ -126,47 +156,12 @@ namespace RimDef
                                     }
                                 }
 
-                                ////////////////////////////////////////////////////////////////////
-                                // <Operation Class="PatchOperationAdd">
-                                //
-                                if (opClass == "PatchOperationAdd")
-                                {
-                                    string xpath = "unset";
-                                    string value = "unset";
-                                    foreach (XmlNode child in opNode.ChildNodes)
-                                    {
-                                        if (child.Name == "xpath") xpath = child.InnerText;
-                                        if (child.Name == "value") value = child.InnerText;
-                                    }
-                                    Console.WriteLine("xpath=" + xpath);
-                                    Console.WriteLine("value=" + value);
-
-                                    Patch patch = new Patch();
-                                    patch.defType = "Patch";
-                                    patch.defName = "PatchOperationAdd";
-
-                                    patch.mod = mod;
-                                    patch.file = file;
-                                    patch.enabled = true;
-                                    patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
-
-                                    patch.patchType = opClass;
-                                    patch.xpath = xpath;
-                                    patch.value = value;
-
-                                    patches.Add(patch);
-
-                                    Console.WriteLine("-----------------------");
-                                }
-
-                                ////////////////////////////////////////////////////////////////////
-                                // <Operation Class="PatchOperationConditional">
-                                //
-                                if (opClass == "PatchOperationConditional")
+                                else if (opClass == "PatchOperationConditional")
                                 {
                                     Patch patch = new Patch();
                                     patch.defType = "Patch";
-                                    patch.defName = "PatchOperationConditional";
+
+                                    patch.defName = opClass;
                                     patch.patchType = opClass;
 
                                     foreach (XmlNode child in opNode.ChildNodes)
@@ -197,6 +192,28 @@ namespace RimDef
                                     patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
                                     patches.Add(patch);
 
+                                    Console.WriteLine("-----------------------");
+                                }
+                                else
+                                {
+                                    Patch patch = new Patch();
+                                    patch.defType = "Patch";
+
+                                    patch.defName = opClass + " (custom)";
+                                    patch.patchType = opClass;
+
+                                    patch.mod = mod;
+                                    patch.file = file;
+                                    patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
+                                    patch.enabled = true;
+
+                                    foreach (XmlNode child in opNode.ChildNodes)
+                                    {
+                                        if (child.Name == "xpath") patch.xpath = child.InnerText;
+                                        if (child.Name == "value") patch.value = child.InnerText;
+                                        if (child.Name == "container") patch.container = child.InnerText;
+                                    }
+                                    patches.Add(patch);
                                     Console.WriteLine("-----------------------");
                                 }
                             }

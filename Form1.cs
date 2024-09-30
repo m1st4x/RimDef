@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace RimDef
@@ -26,8 +27,8 @@ namespace RimDef
         {
             InitializeComponent();
 
-            txtModDir.Text = @"C:\Users\Ralf\Desktop\Rimworld";
-            //txtModDir.Text = @"C:\Games\Rimworld";
+            //txtModDir.Text = @"C:\Users\Ralf\Desktop\Rimworld";
+            txtModDir.Text = @"C:\Games\Rimworld.v1.5.4184";
 
             cbVersion.DataSource = versions;
             cbVersion.SelectedIndex = versions.Length - 1;
@@ -39,9 +40,9 @@ namespace RimDef
             lwDetails.GridLines = true;
             lwDetails.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             lwDetails.HideSelection = false;
-            lwDetails.Location = new System.Drawing.Point(20, 440);
-            lwDetails.Name = "lwDetail";
             //this.lwDetails.Size = new System.Drawing.Size(360, 60);
+            lwDetails.Location = new System.Drawing.Point(200, 450);
+            lwDetails.Name = "lwDetail";
             lwDetails.Scrollable = true;
             lwDetails.TabIndex = 4;
             lwDetails.UseCompatibleStateImageBehavior = false;
@@ -105,9 +106,9 @@ namespace RimDef
                     string path = dir + @"\" + ver + @"\Defs\";
                     if (Directory.Exists(path))
                     {
-                        mod.name = ver + " " + modName;
-                        mod.version = ver;
                         mod.defPath = path;
+                        mod.name = modName;
+                        mod.version = ver;
                     }
                     else
                     {
@@ -182,9 +183,15 @@ namespace RimDef
                     if (patch.defName == selectedName)
                     {
                         xmlView.Text = patch.xml;
-                        //lblPath.Text = patch.file;
+
+                        // trim path
+                        string path = patch.file;
+                        int i = path.IndexOf(@"\Patches");
+                        if (i > -1) path = patch.file.Substring(i);
+
+                        lblXmlPath.Text = "File: " + path;
                         lblXPath.Text = "XPath: " + patch.xpath;
-                        lblXmlPath.Text = patch.file;
+
                     }
                 }
             }
@@ -231,7 +238,7 @@ namespace RimDef
                 string path = def.file;
                 int i = path.IndexOf(@"\1.");
                 if (i > -1) path = def.file.Substring(i);
-                lblXmlPath.Text = path;
+                lblXmlPath.Text = "File: " + path;
 
                 xmlView.Text = def.xml;
 

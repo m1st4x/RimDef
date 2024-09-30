@@ -12,5 +12,7 @@ namespace RimDef
         public string patchType = "-unset-";
         public string xpath = "-unset-";
         public string value = "-unset-";
+        public string success = "-unset-";
+        public string container = "-unset-";
     }
 }

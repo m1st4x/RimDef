@@ -44,12 +44,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.gbDesc = new System.Windows.Forms.GroupBox();
             this.gbRecipe = new System.Windows.Forms.GroupBox();
             this.cbOnlyActiveMods = new System.Windows.Forms.CheckBox();
-            //this.lblPath = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lbPatches = new System.Windows.Forms.ListBox();
             this.cbVersion = new System.Windows.Forms.ComboBox();
@@ -70,7 +68,7 @@
             this.lbMods.Location = new System.Drawing.Point(25, 123);
             this.lbMods.Margin = new System.Windows.Forms.Padding(4);
             this.lbMods.Name = "lbMods";
-            this.lbMods.Size = new System.Drawing.Size(241, 228);
+            this.lbMods.Size = new System.Drawing.Size(220, 660);
             this.lbMods.TabIndex = 0;
             this.lbMods.SelectedIndexChanged += new System.EventHandler(this.lbMods_SelectedIndexChanged);
             // 
@@ -78,10 +76,10 @@
             // 
             this.lbDefTypes.FormattingEnabled = true;
             this.lbDefTypes.ItemHeight = 16;
-            this.lbDefTypes.Location = new System.Drawing.Point(295, 123);
+            this.lbDefTypes.Location = new System.Drawing.Point(265, 123);
             this.lbDefTypes.Margin = new System.Windows.Forms.Padding(4);
             this.lbDefTypes.Name = "lbDefTypes";
-            this.lbDefTypes.Size = new System.Drawing.Size(161, 228);
+            this.lbDefTypes.Size = new System.Drawing.Size(200, 228);
             this.lbDefTypes.TabIndex = 1;
             this.lbDefTypes.SelectedIndexChanged += new System.EventHandler(this.lbDefTypes_SelectedIndexChanged);
             // 
@@ -90,7 +88,7 @@
             this.lwDefs.FullRowSelect = true;
             this.lwDefs.GridLines = true;
             this.lwDefs.HideSelection = false;
-            this.lwDefs.Location = new System.Drawing.Point(755, 123);
+            this.lwDefs.Location = new System.Drawing.Point(760, 123);
             this.lwDefs.Margin = new System.Windows.Forms.Padding(4);
             this.lwDefs.Name = "lwDefs";
             this.lwDefs.Size = new System.Drawing.Size(530, 228);
@@ -104,17 +102,17 @@
             this.lwRecipe.GridLines = true;
             this.lwRecipe.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lwRecipe.HideSelection = false;
-            this.lwRecipe.Location = new System.Drawing.Point(0, 23);
+            this.lwRecipe.Location = new System.Drawing.Point(0, 25);
             this.lwRecipe.Margin = new System.Windows.Forms.Padding(4);
             this.lwRecipe.Name = "lwRecipe";
-            this.lwRecipe.Size = new System.Drawing.Size(479, 98);
+            this.lwRecipe.Size = new System.Drawing.Size(470, 98);
             this.lwRecipe.TabIndex = 3;
             this.lwRecipe.UseCompatibleStateImageBehavior = false;
             this.lwRecipe.View = System.Windows.Forms.View.Details;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(372, 399);
+            this.pictureBox1.Location = new System.Drawing.Point(602, 430);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(133, 123);
@@ -155,7 +153,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(1052, 89);
+            this.txtSearch.Location = new System.Drawing.Point(1057, 89);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(4);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(159, 22);
@@ -164,7 +162,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(1220, 87);
+            this.btnSearch.Location = new System.Drawing.Point(1225, 87);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(67, 28);
@@ -185,13 +183,13 @@
             // 
             // xmlView
             // 
-            this.xmlView.Location = new System.Drawing.Point(755, 399);
+            this.xmlView.Location = new System.Drawing.Point(760, 430);
             this.xmlView.Margin = new System.Windows.Forms.Padding(4);
             this.xmlView.Multiline = true;
             this.xmlView.Name = "xmlView";
             this.xmlView.ReadOnly = true;
             this.xmlView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.xmlView.Size = new System.Drawing.Size(650, 367);
+            this.xmlView.Size = new System.Drawing.Size(630, 353);
             this.xmlView.TabIndex = 11;
             // 
             // label1
@@ -207,7 +205,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(291, 103);
+            this.label2.Location = new System.Drawing.Point(262, 103);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 16);
@@ -224,20 +222,10 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "Rimworld directory";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(752, 379);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(33, 16);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "XML";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(752, 103);
+            this.label5.Location = new System.Drawing.Point(757, 103);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 16);
@@ -247,7 +235,7 @@
             // gbDesc
             // 
             this.gbDesc.Controls.Add(this.thingDesc);
-            this.gbDesc.Location = new System.Drawing.Point(25, 379);
+            this.gbDesc.Location = new System.Drawing.Point(265, 410);
             this.gbDesc.Margin = new System.Windows.Forms.Padding(4);
             this.gbDesc.Name = "gbDesc";
             this.gbDesc.Padding = new System.Windows.Forms.Padding(4);
@@ -260,11 +248,11 @@
             // gbRecipe
             // 
             this.gbRecipe.Controls.Add(this.lwRecipe);
-            this.gbRecipe.Location = new System.Drawing.Point(25, 643);
+            this.gbRecipe.Location = new System.Drawing.Point(265, 660);
             this.gbRecipe.Margin = new System.Windows.Forms.Padding(4);
             this.gbRecipe.Name = "gbRecipe";
             this.gbRecipe.Padding = new System.Windows.Forms.Padding(4);
-            this.gbRecipe.Size = new System.Drawing.Size(480, 123);
+            this.gbRecipe.Size = new System.Drawing.Size(470, 123);
             this.gbRecipe.TabIndex = 20;
             this.gbRecipe.TabStop = false;
             this.gbRecipe.Text = "Ingredients";
@@ -281,19 +269,10 @@
             this.cbOnlyActiveMods.Text = "only active";
             this.cbOnlyActiveMods.UseVisualStyleBackColor = true;
             // 
-            // lblPath
-            // 
-            //this.lblPath.AutoSize = true;
-            //this.lblPath.Location = new System.Drawing.Point(632, 18);
-            //this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            //this.lblPath.Name = "lblPath";
-            //this.lblPath.Size = new System.Drawing.Size(0, 16);
-            //this.lblPath.TabIndex = 24;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(479, 103);
+            this.label6.Location = new System.Drawing.Point(498, 103);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(56, 16);
@@ -304,10 +283,10 @@
             // 
             this.lbPatches.FormattingEnabled = true;
             this.lbPatches.ItemHeight = 16;
-            this.lbPatches.Location = new System.Drawing.Point(483, 123);
+            this.lbPatches.Location = new System.Drawing.Point(501, 123);
             this.lbPatches.Margin = new System.Windows.Forms.Padding(4);
             this.lbPatches.Name = "lbPatches";
-            this.lbPatches.Size = new System.Drawing.Size(215, 228);
+            this.lbPatches.Size = new System.Drawing.Size(220, 228);
             this.lbPatches.TabIndex = 25;
             this.lbPatches.SelectedIndexChanged += new System.EventHandler(this.lbPatches_SelectedIndexChanged);
             // 
@@ -322,7 +301,7 @@
             // btnDisable
             // 
             this.btnDisable.Enabled = false;
-            this.btnDisable.Location = new System.Drawing.Point(1210, 358);
+            this.btnDisable.Location = new System.Drawing.Point(1215, 358);
             this.btnDisable.Name = "btnDisable";
             this.btnDisable.Size = new System.Drawing.Size(75, 23);
             this.btnDisable.TabIndex = 28;
@@ -333,7 +312,7 @@
             // btnEnable
             // 
             this.btnEnable.Enabled = false;
-            this.btnEnable.Location = new System.Drawing.Point(1136, 358);
+            this.btnEnable.Location = new System.Drawing.Point(1141, 358);
             this.btnEnable.Name = "btnEnable";
             this.btnEnable.Size = new System.Drawing.Size(75, 23);
             this.btnEnable.TabIndex = 29;
@@ -344,11 +323,11 @@
             // lblXmlPath
             // 
             this.lblXmlPath.AutoSize = true;
-            this.lblXmlPath.Location = new System.Drawing.Point(792, 379);
+            this.lblXmlPath.Location = new System.Drawing.Point(760, 390);
             this.lblXmlPath.Name = "lblXmlPath";
-            this.lblXmlPath.Size = new System.Drawing.Size(35, 16);
+            this.lblXmlPath.Size = new System.Drawing.Size(32, 16);
             this.lblXmlPath.TabIndex = 30;
-            this.lblXmlPath.Text = "File: ";
+            this.lblXmlPath.Text = "File:";
             // 
             // lblPatchMods
             // 
@@ -361,16 +340,17 @@
             // lblXPath
             // 
             this.lblXPath.AutoSize = true;
-            this.lblXPath.Location = new System.Drawing.Point(480, 76);
+            this.lblXPath.Location = new System.Drawing.Point(760, 410);
             this.lblXPath.Name = "lblXPath";
-            this.lblXPath.Size = new System.Drawing.Size(0, 16);
+            this.lblXPath.Size = new System.Drawing.Size(45, 16);
             this.lblXPath.TabIndex = 32;
+            this.lblXPath.Text = "XPath:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1344, 897);
+            this.ClientSize = new System.Drawing.Size(1422, 853);
             this.Controls.Add(this.lblXPath);
             this.Controls.Add(this.lblPatchMods);
             this.Controls.Add(this.lblXmlPath);
@@ -379,12 +359,10 @@
             this.Controls.Add(this.cbVersion);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.lbPatches);
-            //this.Controls.Add(this.lblPath);
             this.Controls.Add(this.cbOnlyActiveMods);
             this.Controls.Add(this.gbRecipe);
             this.Controls.Add(this.gbDesc);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -429,7 +407,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox gbDesc;
         private System.Windows.Forms.GroupBox gbRecipe;
