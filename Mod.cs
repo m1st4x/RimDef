@@ -13,6 +13,7 @@ namespace RimDef
         public string version;
         public string dir;
         public string defPath;
+        public string patchPath;
 
         public Mod(string name)
         {

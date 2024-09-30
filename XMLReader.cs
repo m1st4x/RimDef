@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace RimDef
 {
@@ -13,78 +16,197 @@ namespace RimDef
 
         public List<Def> loadAllPatches(Mod mod)
         {
-            List<Def> defs = new List<Def>();
-            string path = mod.dir + "\\" + mod.version + "\\Patches";
-            if (Directory.Exists(path))
-            {                
-                foreach (string file in Directory.GetFiles(path, "*.xml", SearchOption.AllDirectories))
+            List<Def> patches = new List<Def>();
+            if (Directory.Exists(mod.patchPath))
+            {
+                foreach (string file in Directory.GetFiles(mod.patchPath, "*.xml", SearchOption.AllDirectories))
                 {
                     try
                     {
                         Console.WriteLine("reading " + file);
                         var doc = new XmlDocument();
-                        doc.Load(file);                        
-                        foreach (XmlNode node in doc.DocumentElement.SelectNodes("/Patch/Operation"))
+                        doc.Load(file);
+
+                        // <Operation>
+                        string opClass = "unset";
+                        XmlNodeList opNodes = doc.DocumentElement.SelectNodes("/Patch/Operation");
+                        foreach (XmlNode opNode in opNodes)
                         {
-                            foreach (XmlNode child in node.ChildNodes)
+                            if (opNode.Attributes != null && opNode.Attributes.Count > 0)
                             {
-                                Patch def = new Patch();
-                                def.defType = "patch";
-                                def.defName = "-undefined-";
-                                if (child.Attributes != null && child.Attributes.Count > 0)
+                                opClass = opNode.Attributes[0].Value;
+                                Console.WriteLine("opClass=" + opClass);
+
+                                ////////////////////////////////////////////////////////////////////
+                                // <Operation Class="PatchOperationFindMod">
+                                //
+                                if (opClass == "PatchOperationFindMod")
                                 {
-                                    def.defName = child.Attributes[0].Value;
-
-                                    string key = child.Name;
-
-                                    if (key == "xpath") def.xpath = child.InnerText;
-
-                                    if (key == "value")
+                                    // mods
+                                    List<string> patchMods = new List<string>();
+                                    XmlNodeList nodeList = doc.DocumentElement.SelectNodes("/Patch/Operation/mods/li");
+                                    foreach (XmlNode li in nodeList)
                                     {
-                                        def.value = child.InnerText;
-                                        foreach (XmlNode patchNode in child.SelectNodes("li"))
+                                        patchMods = new List<string>();
+                                        foreach (XmlNode node in nodeList)
                                         {
-                                            //Console.WriteLine($"{patchNode.InnerText} {value}");
+                                            patchMods.Add(node.InnerText);
+                                            Console.WriteLine($"mods={node.InnerText}");
                                         }
                                     }
 
-                                    def.xml = System.Xml.Linq.XDocument.Parse(child.OuterXml).ToString();
-                                    def.mod = mod;
-                                    def.file = file;
-                                    def.enabled = true;
-                                    defs.Add(def);
+                                    // match
+                                    XmlNode match = doc.DocumentElement.SelectSingleNode("/Patch/Operation/match");
+                                    if (match != null)
+                                    {
+                                        string matchClass = "unset";
+                                        if (match.Attributes != null && match.Attributes.Count > 0)
+                                        {
+                                            matchClass = match.Attributes["Class"].Value;
+                                            Console.WriteLine("Class=" + matchClass);
+                                        }
 
+                                        if (matchClass == "PatchOperationAdd")
+                                        {
+                                            //TODO
+                                        }
+
+                                        if (matchClass == "PatchOperationSequence")
+                                        {
+                                            // sequence
+                                            foreach (XmlNode li in match.SelectNodes("operations/li"))
+                                            {
+                                                // type
+                                                string liClass = "unset";
+                                                if (li.Attributes != null && li.Attributes.Count > 0)
+                                                {
+                                                    liClass = li.Attributes["Class"].Value;
+                                                    Console.WriteLine("liClass=" + liClass);
+                                                }
+
+                                                string xpath = "unset";
+                                                string value = "unset";
+                                                foreach (XmlNode child in li.ChildNodes)
+                                                {
+                                                    if (child.Name == "xpath") xpath = child.InnerText;
+                                                    if (child.Name == "value") value = child.InnerText;
+                                                }
+                                                Console.WriteLine("xpath=" + xpath);
+                                                Console.WriteLine("value=" + value);
+
+                                                // name
+                                                string name = "unset";
+                                                try
+                                                {
+                                                    int start = xpath.IndexOf("\"");
+                                                    int end = xpath.LastIndexOf("\"");
+                                                    name = xpath.Substring(start + 1, end - start - 1);
+                                                    Console.WriteLine("target=" + name);
+                                                }
+                                                catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+                                                Patch patch = new Patch();
+                                                patch.defType = matchClass;
+                                                patch.defName = name;
+                                                patch.mod = mod;
+                                                patch.mods = patchMods;
+                                                patch.file = file;
+                                                patch.enabled = true;
+                                                patch.xml = System.Xml.Linq.XDocument.Parse(match.OuterXml).ToString();
+
+                                                patch.patchType = liClass;
+                                                patch.xpath = xpath;
+                                                patch.value = value;
+
+                                                patches.Add(patch);
+
+                                                Console.WriteLine("-----------------------");
+                                            }
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        foreach (XmlNode li in doc.DocumentElement.SelectNodes("/Patch/Operation/match/operations/li"))
-                        {
-                            Patch op = new Patch();
-                            op.defType = "patch";
-                            op.defName = "-undef-";
-                            if (li.Attributes != null && li.Attributes.Count > 0)
-                            {
-                                op.defName = li.Attributes[0].Value;
-                                foreach (XmlNode child in li.ChildNodes)
+                                ////////////////////////////////////////////////////////////////////
+                                // <Operation Class="PatchOperationAdd">
+                                //
+                                if (opClass == "PatchOperationAdd")
                                 {
-                                    if (child.Name == "xpath") op.xpath = child.InnerText;
-                                    if (child.Name == "value") op.value = child.InnerText;
+                                    string xpath = "unset";
+                                    string value = "unset";
+                                    foreach (XmlNode child in opNode.ChildNodes)
+                                    {
+                                        if (child.Name == "xpath") xpath = child.InnerText;
+                                        if (child.Name == "value") value = child.InnerText;
+                                    }
+                                    Console.WriteLine("xpath=" + xpath);
+                                    Console.WriteLine("value=" + value);
+
+                                    Patch patch = new Patch();
+                                    patch.defType = "Patch";
+                                    patch.defName = "PatchOperationAdd";
+
+                                    patch.mod = mod;
+                                    patch.file = file;
+                                    patch.enabled = true;
+                                    patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
+
+                                    patch.patchType = opClass;
+                                    patch.xpath = xpath;
+                                    patch.value = value;
+
+                                    patches.Add(patch);
+
+                                    Console.WriteLine("-----------------------");
                                 }
-                                op.xml = System.Xml.Linq.XDocument.Parse(li.OuterXml).ToString();
-                                op.mod = mod;
-                                op.file = file;
-                                op.enabled = true;
-                                defs.Add(op);
+
+                                ////////////////////////////////////////////////////////////////////
+                                // <Operation Class="PatchOperationConditional">
+                                //
+                                if (opClass == "PatchOperationConditional")
+                                {
+                                    Patch patch = new Patch();
+                                    patch.defType = "Patch";
+                                    patch.defName = "PatchOperationConditional";
+                                    patch.patchType = opClass;
+
+                                    foreach (XmlNode child in opNode.ChildNodes)
+                                    {
+                                        if (child.Name == "xpath") patch.xpath = child.InnerText;
+                                        if (child.Name == "value") patch.value = child.InnerText;
+
+                                        //TODO
+                                        if (child.Name == "match")
+                                        {
+                                            if (child.Attributes != null && child.Attributes.Count > 0)
+                                            {
+                                                string matchClass = child.Attributes[0].Value;
+                                            }
+                                        }
+                                        if (child.Name == "nomatch")
+                                        {
+                                            if (child.Attributes != null && child.Attributes.Count > 0)
+                                            {
+                                                string nomatchClass = child.Attributes[0].Value;
+                                            }
+                                        }
+                                    }
+
+                                    patch.mod = mod;
+                                    patch.file = file;
+                                    patch.enabled = true;
+                                    patch.xml = System.Xml.Linq.XDocument.Parse(opNode.OuterXml).ToString();
+                                    patches.Add(patch);
+
+                                    Console.WriteLine("-----------------------");
+                                }
                             }
                         }
-
                     }
                     catch (Exception e) { Console.WriteLine(e); }
                 }
             }
 
-            return defs;
+            return patches;
         }
 
         public List<Def> loadAllDefs(Mod mod)
@@ -116,33 +238,48 @@ namespace RimDef
         public List<string> readModConfig()
         {
             List<string> activeMods = new List<string>();
-            string path = Environment.ExpandEnvironmentVariables(appdataPath);
-            var doc = new XmlDocument();
-            doc.Load(path);
-            foreach (XmlNode node in doc.DocumentElement.SelectNodes("/ModsConfigData/activeMods/li"))
-                activeMods.Add(node.InnerText);
+            try
+            {
+                string path = Environment.ExpandEnvironmentVariables(appdataPath);
+                var doc = new XmlDocument();
+                doc.Load(path);
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("/ModsConfigData/activeMods/li"))
+                    activeMods.Add(node.InnerText);
+            }
+            catch (Exception e) { Console.WriteLine(e); }
+
             return activeMods;
         }
 
         public string readPackageId(string file)
         {
-            string packageId = "-undefined-";
-            var doc = new XmlDocument();
-            doc.Load(file);
-            XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/packageId");
-            if (node != null)
-                packageId = node.InnerText.ToLower();
+            string packageId = "-undef-";
+            try
+            {
+                var doc = new XmlDocument();
+                doc.Load(file);
+                XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/packageId");
+                if (node != null)
+                    packageId = node.InnerText.ToLower();
+            }
+            catch (Exception e) { Console.WriteLine(e); }
+
             return packageId;
         }
 
         public string readModName(string file)
         {
-            string modName = "-undefined-";
-            var doc = new XmlDocument();
-            doc.Load(file);
-            XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/name");
-            if (node != null)
-                modName = node.InnerText.ToLower();
+            string modName = "-undef-";
+            try
+            {
+                var doc = new XmlDocument();
+                doc.Load(file);
+                XmlNode node = doc.DocumentElement.SelectSingleNode("/ModMetaData/name");
+                if (node != null)
+                    modName = node.InnerText.ToLower();
+            }
+            catch (Exception e) { Console.WriteLine(e); }
+
             return modName;
         }
 

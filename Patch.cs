@@ -8,7 +8,9 @@ namespace RimDef
 {
     public class Patch : Def
     {
-        public string xpath = "unset";
-        public string value = "unset";
+        public List<string> mods = new List<string>();
+        public string patchType = "-unset-";
+        public string xpath = "-unset-";
+        public string value = "-unset-";
     }
 }

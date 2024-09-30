@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace RimDef
@@ -28,7 +27,7 @@ namespace RimDef
             InitializeComponent();
 
             txtModDir.Text = @"C:\Users\Ralf\Desktop\Rimworld";
-            txtModDir.Text = @"C:\Games\Rimworld";
+            //txtModDir.Text = @"C:\Games\Rimworld";
 
             cbVersion.DataSource = versions;
             cbVersion.SelectedIndex = versions.Length - 1;
@@ -79,45 +78,62 @@ namespace RimDef
             foreach (string content in vanilla)
             {
                 Mod dlc = new Mod(content);
-                dlc.dir = rimDir + "\\Data\\" + content + "\\";
-                dlc.defPath = rimDir + "\\Data\\" + content + "\\Defs\\";
+                dlc.dir = rimDir + @"\Data\" + content + @"\";
+                dlc.defPath = rimDir + @"\Data\" + content + @"\Defs\";
                 lbMods.Items.Add(dlc);
             }
 
             // mod content
-            string modDir = rimDir + "\\Mods\\";
+            string modDir = rimDir + @"\Mods\";
             foreach (string dir in Directory.GetDirectories(modDir))
             {
                 try
                 {
-                    string packageId = xmlReader.readPackageId(dir + "\\About\\About.xml");
+                    string packageId = xmlReader.readPackageId(dir + @"\About\About.xml");
                     if (cbOnlyActiveMods.Checked)
                     {
                         if (!activeMods.Contains(packageId)) continue;
                     }
 
-                    string modName = xmlReader.readModName(dir + "\\About\\About.xml");
+                    string modName = xmlReader.readModName(dir + @"\About\About.xml");
+                    Mod mod = new Mod(modName);
+                    mod.packageId = packageId;
+                    mod.dir = dir;
 
-                    string path = dir + "\\Defs\\";
-                    if (Directory.Exists(path))
-                    {
-                        Mod mod = new Mod(modName);
-                        mod.packageId = packageId;
-                        mod.dir = dir;
-                        mod.defPath = path;
-                    }
-
+                    // Defs dir
                     string ver = versions[cbVersion.SelectedIndex];
-                    path = dir + "\\" + ver + "\\Defs\\";
+                    string path = dir + @"\" + ver + @"\Defs\";
                     if (Directory.Exists(path))
                     {
-                        Mod mod = new Mod(ver + " " + modName);
-                        mod.packageId = packageId;
+                        mod.name = ver + " " + modName;
                         mod.version = ver;
-                        mod.dir = dir;
                         mod.defPath = path;
-                        lbMods.Items.Add(mod);
                     }
+                    else
+                    {
+                        path = dir + @"\Defs\";
+                        if (Directory.Exists(path))
+                        {
+                            mod.defPath = path;
+                        }
+                    }
+
+                    // Patch dir
+                    path = dir + @"\" + ver + @"\Patches\";
+                    if (Directory.Exists(path))
+                    {
+                        mod.patchPath = path;
+                    }
+                    else
+                    {
+                        path = dir + @"\Patches\";
+                        if (Directory.Exists(path))
+                        {
+                            mod.patchPath = path;
+                        }
+                    }
+
+                    lbMods.Items.Add(mod);
                 }
                 catch (Exception e) { Console.WriteLine(e); }
             }
@@ -140,6 +156,8 @@ namespace RimDef
             }
             lbPatches.DataSource = null;
             lbPatches.DataSource = patchesView;
+            if (lbPatches.Items.Count > 0)
+                lbPatches.SetSelected(0, false);
 
             // reset form
             lwDefs.Items.Clear();
@@ -159,12 +177,14 @@ namespace RimDef
             if (lbPatches.SelectedIndices.Count > 0)
             {
                 string selectedName = patchesView[lbPatches.SelectedIndices[0]];
-                foreach (Def patch in patches)
+                foreach (Patch patch in patches)
                 {
                     if (patch.defName == selectedName)
                     {
                         xmlView.Text = patch.xml;
-                        lblPath.Text = patch.file;
+                        //lblPath.Text = patch.file;
+                        lblXPath.Text = "XPath: " + patch.xpath;
+                        lblXmlPath.Text = patch.file;
                     }
                 }
             }
@@ -189,7 +209,7 @@ namespace RimDef
                         lwDefs.Items.Add(listViewItem);
                     }
                 }
-                xmlView.Text = "";
+                xmlView.Clear();
             }
         }
 
@@ -204,15 +224,14 @@ namespace RimDef
                 pictureBox1.Visible = false;
                 lwDetails.Visible = false;
 
-                //
                 btnDisable.Enabled = def.enabled;
                 btnEnable.Enabled = !btnDisable.Enabled;
-                //
 
-                //
-                int i = def.file.IndexOf("\\1.");
-                if (i > -1) lblPath.Text = def.file.Substring(i);
-                //
+                // trim path
+                string path = def.file;
+                int i = path.IndexOf(@"\1.");
+                if (i > -1) path = def.file.Substring(i);
+                lblXmlPath.Text = path;
 
                 xmlView.Text = def.xml;
 

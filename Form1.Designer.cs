@@ -49,12 +49,15 @@
             this.gbDesc = new System.Windows.Forms.GroupBox();
             this.gbRecipe = new System.Windows.Forms.GroupBox();
             this.cbOnlyActiveMods = new System.Windows.Forms.CheckBox();
-            this.lblPath = new System.Windows.Forms.Label();
+            //this.lblPath = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lbPatches = new System.Windows.Forms.ListBox();
             this.cbVersion = new System.Windows.Forms.ComboBox();
             this.btnDisable = new System.Windows.Forms.Button();
             this.btnEnable = new System.Windows.Forms.Button();
+            this.lblXmlPath = new System.Windows.Forms.Label();
+            this.lblPatchMods = new System.Windows.Forms.Label();
+            this.lblXPath = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -280,12 +283,12 @@
             // 
             // lblPath
             // 
-            this.lblPath.AutoSize = true;
-            this.lblPath.Location = new System.Drawing.Point(632, 18);
-            this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblPath.Name = "lblPath";
-            this.lblPath.Size = new System.Drawing.Size(0, 16);
-            this.lblPath.TabIndex = 24;
+            //this.lblPath.AutoSize = true;
+            //this.lblPath.Location = new System.Drawing.Point(632, 18);
+            //this.lblPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            //this.lblPath.Name = "lblPath";
+            //this.lblPath.Size = new System.Drawing.Size(0, 16);
+            //this.lblPath.TabIndex = 24;
             // 
             // label6
             // 
@@ -338,17 +341,45 @@
             this.btnEnable.UseVisualStyleBackColor = true;
             this.btnEnable.Click += new System.EventHandler(this.btnEnable_Click);
             // 
+            // lblXmlPath
+            // 
+            this.lblXmlPath.AutoSize = true;
+            this.lblXmlPath.Location = new System.Drawing.Point(792, 379);
+            this.lblXmlPath.Name = "lblXmlPath";
+            this.lblXmlPath.Size = new System.Drawing.Size(35, 16);
+            this.lblXmlPath.TabIndex = 30;
+            this.lblXmlPath.Text = "File: ";
+            // 
+            // lblPatchMods
+            // 
+            this.lblPatchMods.AutoSize = true;
+            this.lblPatchMods.Location = new System.Drawing.Point(482, 358);
+            this.lblPatchMods.Name = "lblPatchMods";
+            this.lblPatchMods.Size = new System.Drawing.Size(0, 16);
+            this.lblPatchMods.TabIndex = 31;
+            // 
+            // lblXPath
+            // 
+            this.lblXPath.AutoSize = true;
+            this.lblXPath.Location = new System.Drawing.Point(480, 76);
+            this.lblXPath.Name = "lblXPath";
+            this.lblXPath.Size = new System.Drawing.Size(0, 16);
+            this.lblXPath.TabIndex = 32;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 897);
+            this.Controls.Add(this.lblXPath);
+            this.Controls.Add(this.lblPatchMods);
+            this.Controls.Add(this.lblXmlPath);
             this.Controls.Add(this.btnEnable);
             this.Controls.Add(this.btnDisable);
             this.Controls.Add(this.cbVersion);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.lbPatches);
-            this.Controls.Add(this.lblPath);
+            //this.Controls.Add(this.lblPath);
             this.Controls.Add(this.cbOnlyActiveMods);
             this.Controls.Add(this.gbRecipe);
             this.Controls.Add(this.gbDesc);
@@ -403,12 +434,15 @@
         private System.Windows.Forms.GroupBox gbDesc;
         private System.Windows.Forms.GroupBox gbRecipe;
         private System.Windows.Forms.CheckBox cbOnlyActiveMods;
-        private System.Windows.Forms.Label lblPath;
+        //private System.Windows.Forms.Label lblPath;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ListBox lbPatches;
         private System.Windows.Forms.ComboBox cbVersion;
         private System.Windows.Forms.Button btnDisable;
         private System.Windows.Forms.Button btnEnable;
+        private System.Windows.Forms.Label lblXmlPath;
+        private System.Windows.Forms.Label lblPatchMods;
+        private System.Windows.Forms.Label lblXPath;
     }
 }
 
