@@ -34,8 +34,8 @@
             this.lwRecipe = new System.Windows.Forms.ListView();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnFolder = new System.Windows.Forms.Button();
-            this.txtModDir = new System.Windows.Forms.TextBox();
+            this.btnGameDir = new System.Windows.Forms.Button();
+            this.txtRimDir = new System.Windows.Forms.TextBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -56,6 +56,8 @@
             this.lblXmlPath = new System.Windows.Forms.Label();
             this.lblPatchMods = new System.Windows.Forms.Label();
             this.lblXPath = new System.Windows.Forms.Label();
+            this.txtModDir = new System.Windows.Forms.TextBox();
+            this.btnModsDir = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.gbDesc.SuspendLayout();
             this.gbRecipe.SuspendLayout();
@@ -121,28 +123,28 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
             // 
-            // btnFolder
+            // btnGameDir
             // 
-            this.btnFolder.Location = new System.Drawing.Point(348, 37);
-            this.btnFolder.Margin = new System.Windows.Forms.Padding(4);
-            this.btnFolder.Name = "btnFolder";
-            this.btnFolder.Size = new System.Drawing.Size(33, 28);
-            this.btnFolder.TabIndex = 5;
-            this.btnFolder.Text = "...";
-            this.btnFolder.UseVisualStyleBackColor = true;
-            this.btnFolder.Click += new System.EventHandler(this.btnFolder_Click);
+            this.btnGameDir.Location = new System.Drawing.Point(388, 38);
+            this.btnGameDir.Margin = new System.Windows.Forms.Padding(4);
+            this.btnGameDir.Name = "btnGameDir";
+            this.btnGameDir.Size = new System.Drawing.Size(33, 28);
+            this.btnGameDir.TabIndex = 5;
+            this.btnGameDir.Text = "...";
+            this.btnGameDir.UseVisualStyleBackColor = true;
+            this.btnGameDir.Click += new System.EventHandler(this.btnGameDir_Click);
             // 
-            // txtModDir
+            // txtRimDir
             // 
-            this.txtModDir.Location = new System.Drawing.Point(24, 39);
-            this.txtModDir.Margin = new System.Windows.Forms.Padding(4);
-            this.txtModDir.Name = "txtModDir";
-            this.txtModDir.Size = new System.Drawing.Size(315, 22);
-            this.txtModDir.TabIndex = 6;
+            this.txtRimDir.Location = new System.Drawing.Point(80, 40);
+            this.txtRimDir.Margin = new System.Windows.Forms.Padding(4);
+            this.txtRimDir.Name = "txtRimDir";
+            this.txtRimDir.Size = new System.Drawing.Size(300, 22);
+            this.txtRimDir.TabIndex = 6;
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(389, 37);
+            this.btnLoad.Location = new System.Drawing.Point(429, 40);
             this.btnLoad.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(67, 28);
@@ -195,7 +197,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 103);
+            this.label1.Location = new System.Drawing.Point(22, 73);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 16);
@@ -215,12 +217,12 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 20);
+            this.label3.Location = new System.Drawing.Point(22, 42);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(118, 16);
+            this.label3.Size = new System.Drawing.Size(44, 16);
             this.label3.TabIndex = 14;
-            this.label3.Text = "Rimworld directory";
+            this.label3.Text = "Game";
             // 
             // label5
             // 
@@ -261,7 +263,7 @@
             // cbOnlyActiveMods
             // 
             this.cbOnlyActiveMods.AutoSize = true;
-            this.cbOnlyActiveMods.Location = new System.Drawing.Point(88, 70);
+            this.cbOnlyActiveMods.Location = new System.Drawing.Point(502, 70);
             this.cbOnlyActiveMods.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbOnlyActiveMods.Name = "cbOnlyActiveMods";
             this.cbOnlyActiveMods.Size = new System.Drawing.Size(93, 20);
@@ -293,10 +295,11 @@
             // cbVersion
             // 
             this.cbVersion.FormattingEnabled = true;
-            this.cbVersion.Location = new System.Drawing.Point(23, 68);
+            this.cbVersion.Location = new System.Drawing.Point(429, 68);
             this.cbVersion.Name = "cbVersion";
-            this.cbVersion.Size = new System.Drawing.Size(59, 24);
+            this.cbVersion.Size = new System.Drawing.Size(67, 24);
             this.cbVersion.TabIndex = 27;
+            this.cbVersion.SelectedIndexChanged += new System.EventHandler(this.cbVersion_SelectedIndexChanged);
             // 
             // btnDisable
             // 
@@ -346,11 +349,32 @@
             this.lblXPath.TabIndex = 32;
             this.lblXPath.Text = "XPath:";
             // 
+            // txtModDir
+            // 
+            this.txtModDir.Location = new System.Drawing.Point(80, 70);
+            this.txtModDir.Margin = new System.Windows.Forms.Padding(4);
+            this.txtModDir.Name = "txtModDir";
+            this.txtModDir.Size = new System.Drawing.Size(300, 22);
+            this.txtModDir.TabIndex = 33;
+            // 
+            // btnModsDir
+            // 
+            this.btnModsDir.Location = new System.Drawing.Point(388, 64);
+            this.btnModsDir.Margin = new System.Windows.Forms.Padding(4);
+            this.btnModsDir.Name = "btnModsDir";
+            this.btnModsDir.Size = new System.Drawing.Size(33, 28);
+            this.btnModsDir.TabIndex = 34;
+            this.btnModsDir.Text = "...";
+            this.btnModsDir.UseVisualStyleBackColor = true;
+            this.btnModsDir.Click += new System.EventHandler(this.btnModsDir_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1422, 853);
+            this.Controls.Add(this.btnModsDir);
+            this.Controls.Add(this.txtModDir);
             this.Controls.Add(this.lblXPath);
             this.Controls.Add(this.lblPatchMods);
             this.Controls.Add(this.lblXmlPath);
@@ -370,8 +394,8 @@
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.txtModDir);
-            this.Controls.Add(this.btnFolder);
+            this.Controls.Add(this.txtRimDir);
+            this.Controls.Add(this.btnGameDir);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lwDefs);
             this.Controls.Add(this.lbDefTypes);
@@ -397,8 +421,8 @@
         private System.Windows.Forms.ListView lwRecipe;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Button btnFolder;
-        private System.Windows.Forms.TextBox txtModDir;
+        private System.Windows.Forms.Button btnGameDir;
+        private System.Windows.Forms.TextBox txtRimDir;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
@@ -420,6 +444,8 @@
         private System.Windows.Forms.Label lblXmlPath;
         private System.Windows.Forms.Label lblPatchMods;
         private System.Windows.Forms.Label lblXPath;
+        private System.Windows.Forms.TextBox txtModDir;
+        private System.Windows.Forms.Button btnModsDir;
     }
 }
 
